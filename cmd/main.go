@@ -1,15 +1,15 @@
 package main
 
 import (
-	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barras"
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 )
 
 func main() {
-    barras.barras_do_sistema(barras.tabela_excel())
+    barra.Barras_do_sistema(barra.Tabela_excel())
 
-    tipo_1 := barras.Elementos_tipo_1(barras.tabela_excel())
-    tipo_2_3 := barras.Elementos_tipo_2_3(barras.tabela_excel())
+    tipo_1 := barra.Elementos_tipo_1(barra.Tabela_excel())
+    tipo_2_3 := barra.Elementos_tipo_2_3(barra.Tabela_excel())
 
-    barras.Zbus(tipo_1, tipo_2_3)
+    barra.Zbus(tipo_1, tipo_2_3)
 
 }

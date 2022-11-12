@@ -1,4 +1,4 @@
-package main
+package barra
 
 import (
     "fmt"
@@ -28,16 +28,6 @@ type dados_de_linha struct {
 
 type posicao_zbus struct {
     Posicao   int
-}
-
-func main() {
-    barras_do_sistema(tabela_excel())
-
-    tipo_1 := Elementos_tipo_1(tabela_excel())
-    tipo_2_3 := Elementos_tipo_2_3(tabela_excel())
-
-    Zbus(tipo_1, tipo_2_3)
-
 }
 
 
@@ -133,8 +123,8 @@ func adiciona_elemento_2(barra string, barra_conectada string, zbus [50][50]floa
 
 
 
-func tabela_excel() *excelize.File {
-    tabela_excel, err := excelize.OpenFile("../../ACCH/dados_acch.xlsx")
+func Tabela_excel() *excelize.File {
+    tabela_excel, err := excelize.OpenFile("../../../ACCH/dados_acch.xlsx")
     valida_erro(err)
 
     return tabela_excel
@@ -164,7 +154,7 @@ func barras_de_geracao(tabela_excel *excelize.File) []string {
 }
 
 
-func barras_do_sistema(tabela_excel *excelize.File) ([]string, map[string]dados_de_barra) {
+func Barras_do_sistema(tabela_excel *excelize.File) ([]string, map[string]dados_de_barra) {
     var barras_do_sistema []string
 
     // Pega a coluna de barras da tabela de dados das barras
