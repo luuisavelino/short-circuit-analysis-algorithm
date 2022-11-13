@@ -89,9 +89,9 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File) []Dados_de_linha {
     dados_linhas = dados_linhas[2:len(dados_linhas)]
     geral.Valida_erro(err)
 
-    var elementos_tipo_1_2 []Dados_de_linha
+    var elementos_tipo_2_3 []Dados_de_linha
     for x := 0; x < len(dados_linhas); x ++ {
-        elementos_tipo_1_2 = append(elementos_tipo_1_2, Dados_de_linha{
+        elementos_tipo_2_3 = append(elementos_tipo_2_3, Dados_de_linha{
             De:	                    dados_linhas[x][0],
             Para:	                dados_linhas[x][1],
             Nome:	                dados_linhas[x][2],
@@ -100,7 +100,7 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File) []Dados_de_linha {
         })
     }
 
-    return elementos_tipo_1_2
+    return elementos_tipo_2_3
 }
 
 
