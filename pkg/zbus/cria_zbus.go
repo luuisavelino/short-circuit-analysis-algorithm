@@ -9,10 +9,10 @@ type posicao_zbus struct {
     Posicao   int
 }
 
-func Zbus(elementos_tipo_1 map[string]barra.Dados_de_linha, elementos_tipo_2_3 []barra.Dados_de_linha) {
+func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Dados_de_linha) {
 
-    var zbus_positiva [40][40]float64
-    var zbus_zero [40][40]float64
+    var zbus_positiva [50][50]float64
+    var zbus_zero [50][50]float64
     var elementos_tipo_3 []barra.Dados_de_linha
 
     barras_adicionadas := make(map[string]posicao_zbus)
@@ -20,18 +20,17 @@ func Zbus(elementos_tipo_1 map[string]barra.Dados_de_linha, elementos_tipo_2_3 [
 
     // Adiciona os elementos do tipo 1
     // Loop passando por todos os elementos do tipo 1, e adicionando cada um na matriz Zbus
-    for barra, dados_linha := range elementos_tipo_1 {
+    for _, dados_linha := range elementos_tipo_1 {
 
         zbus_positiva = Adiciona_elemento_tipo_1_na_zbus(zbus_positiva, posicao, dados_linha.Impedancia_positiva)
         zbus_zero = Adiciona_elemento_tipo_1_na_zbus(zbus_zero, posicao, dados_linha.Impedancia_zero)
 
-        barras_adicionadas[barra] = posicao_zbus{
+        barras_adicionadas[dados_linha.De] = posicao_zbus{
             Posicao:    posicao,
         }
 
         posicao++
     }
-
 
     // Adiciona os elementos do tipo 2
     // Valida se o elemento é do tipo 2, caso seja, adiciona na Zbus
@@ -47,6 +46,8 @@ func Zbus(elementos_tipo_1 map[string]barra.Dados_de_linha, elementos_tipo_2_3 [
             if existe_de && existe_para {
                 elementos_tipo_3 = append(elementos_tipo_3, linha)
                 elementos_tipo_2_3 = RemoveIndex(elementos_tipo_2_3, x)
+
+                fmt.Println(linha)
 
             } else if existe_de {
                 zbus_positiva = Adiciona_elemento_tipo_2_na_zbus(zbus_positiva, barras_adicionadas[linha.De].Posicao, posicao, linha.Impedancia_positiva)
@@ -71,6 +72,9 @@ func Zbus(elementos_tipo_1 map[string]barra.Dados_de_linha, elementos_tipo_2_3 [
         }
     }
 
+    fmt.Println(posicao)
+    fmt.Println(len(elementos_tipo_3))
+
     // Com a lista criada de elementos do tipo 3, adicionamos na Zbus
     for x := 0; x < len(elementos_tipo_3); x++ {
         linha := elementos_tipo_3[x]
@@ -81,7 +85,6 @@ func Zbus(elementos_tipo_1 map[string]barra.Dados_de_linha, elementos_tipo_2_3 [
         posicao++
     }
 
-    fmt.Println(zbus_positiva)
 }
 
 func RemoveIndex(s []barra.Dados_de_linha, index int) []barra.Dados_de_linha {

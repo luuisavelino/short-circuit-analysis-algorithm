@@ -1,13 +1,13 @@
 package zbus
 
 
-func Adiciona_elemento_tipo_1_na_zbus(zbus [40][40]float64, posicao int, impedancia float64) [40][40]float64 {
+func Adiciona_elemento_tipo_1_na_zbus(zbus [50][50]float64, posicao int, impedancia float64) [50][50]float64 {
 	zbus[posicao][posicao] = impedancia
 
 	return zbus
 }
 
-func Adiciona_elemento_tipo_2_na_zbus(zbus [40][40]float64, posicao_barra_conectada int, posicao int, impedancia float64) [40][40]float64 {
+func Adiciona_elemento_tipo_2_na_zbus(zbus [50][50]float64, posicao_barra_conectada int, posicao int, impedancia float64) [50][50]float64 {
 
 	for x := 0; x < posicao; x++ {
 		zbus[x][posicao] = zbus[x][posicao_barra_conectada]
@@ -19,7 +19,7 @@ func Adiciona_elemento_tipo_2_na_zbus(zbus [40][40]float64, posicao_barra_conect
 	return zbus
 }
 
-func Adiciona_elemento_tipo_3_na_zbus(zbus [40][40]float64, posicao_barra_de int, posicao_barra_para int, posicao int, impedancia float64) [40][40]float64 {
+func Adiciona_elemento_tipo_3_na_zbus(zbus [50][50]float64, posicao_barra_de int, posicao_barra_para int, posicao int, impedancia float64) [50][50]float64 {
 
 	for x := 0; x < posicao; x++ {
 		zbus[x][posicao] = zbus[x][posicao_barra_de] - zbus[x][posicao_barra_para]

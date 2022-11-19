@@ -21,6 +21,13 @@ func Impedancia(resistencia_linha string, reatancia_linha string, impedancia_atu
 }
 
 
+func String_para_float(grandeza_str string) float64 {
+    grandeza, _ := strconv.ParseFloat(grandeza_str, 64)
+
+    return grandeza
+}
+
+
 func Difference(a, b []string) []string {
     mb := make(map[string]struct{}, len(b))
 
@@ -42,6 +49,4 @@ func Valida_erro(err error) {
         log.Fatal(err)
         return
     }
-
-    return
 }
