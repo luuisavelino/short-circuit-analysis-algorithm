@@ -3,6 +3,7 @@ package barra
 import (
     "github.com/xuri/excelize/v2"
     "github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/geral"
+    //"fmt"
 )
 
 type Dados_de_barra struct {
@@ -34,7 +35,7 @@ func barras_de_geracao(tabela_excel *excelize.File) []string {
         col, err := colunas_dados_de_geradores.Rows()
         geral.Valida_erro(err)
 
-        barra_geradores = col[1:len(col)]
+        barra_geradores = col[1:]
         break
     }
 
@@ -54,7 +55,7 @@ func Barras_do_sistema(tabela_excel *excelize.File) ([]string, map[string]Dados_
         col, err := colunas_dados_de_barra.Rows()
         geral.Valida_erro(err)
         barras_do_sistema = geral.Difference(col[2:len(col)-1], barras_de_geracao(tabela_excel))
-        
+
         break
     }
 
@@ -63,8 +64,8 @@ func Barras_do_sistema(tabela_excel *excelize.File) ([]string, map[string]Dados_
     geral.Valida_erro(err)
 
     // Filtra os dados de barra, exclindo o cabeçalho
-    dados_de_barra_bruto = dados_de_barra_bruto[2:len(dados_de_barra_bruto)]
-    
+    dados_de_barra_bruto = dados_de_barra_bruto[2:]
+
     // Desenvolve um dicinário de dados de barra, onde teremos todas as barras do sistema
     barras := make(map[string]Dados_de_barra)
     for x := 0; x < len(dados_de_barra_bruto); x ++ {
@@ -86,7 +87,7 @@ func Barras_do_sistema(tabela_excel *excelize.File) ([]string, map[string]Dados_
 func Elementos_tipo_2_3(tabela_excel *excelize.File) []Dados_de_linha {
 
     dados_linhas, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[1])
-    dados_linhas = dados_linhas[2:len(dados_linhas)]
+    dados_linhas = dados_linhas[2:]
     geral.Valida_erro(err)
 
     var elementos_tipo_2_3 []Dados_de_linha
@@ -107,7 +108,7 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File) []Dados_de_linha {
 func Elementos_tipo_1(tabela_excel *excelize.File) map[string]Dados_de_linha {
 
     dados_transformadores, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[3])
-    dados_transformadores = dados_transformadores[2:len(dados_transformadores)]
+    dados_transformadores = dados_transformadores[2:]
     geral.Valida_erro(err)
 
     elementos_tipo_1 := make(map[string]Dados_de_linha)
