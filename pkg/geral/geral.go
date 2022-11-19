@@ -4,9 +4,13 @@ import (
 	"log"
 	"math"
 	"strconv"
-	//"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 )
 
+
+// Entrada:     Resistencia, Reatancia, e a impedância atual
+// Processo:    Realiza o calculo da impedância
+//              Caso já exista uma impedância atual, ele irá realizar o paralelo entre eles
+// Saída:       Retorna o valor da impedância
 func Impedancia(resistencia_linha string, reatancia_linha string, impedancia_atual float64) float64 {
     resistencia, _ := strconv.ParseFloat(resistencia_linha, 64)
     reatancia, _ := strconv.ParseFloat(reatancia_linha, 64)
@@ -21,6 +25,7 @@ func Impedancia(resistencia_linha string, reatancia_linha string, impedancia_atu
 }
 
 
+// Irá converter o tipo string para o tipo float64
 func String_para_float(grandeza_str string) float64 {
     grandeza, _ := strconv.ParseFloat(grandeza_str, 64)
 
@@ -28,22 +33,7 @@ func String_para_float(grandeza_str string) float64 {
 }
 
 
-func Difference(a, b []string) []string {
-    mb := make(map[string]struct{}, len(b))
-
-    for _, x := range b {
-        mb[x] = struct{}{}
-    }
-    var diff []string
-    for _, x := range a {
-        if _, found := mb[x]; !found {
-            diff = append(diff, x)
-        }
-    }
-    return diff
-}
-
-
+// Realiza a validação do erro
 func Valida_erro(err error) {
     if err != nil {
         log.Fatal(err)

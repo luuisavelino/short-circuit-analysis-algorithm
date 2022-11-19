@@ -17,19 +17,26 @@ type Dados_de_linha struct {
 }
 
 
+// Entrada:     Tabela do excel
+//
+// Processo:    Pega a tabela do 3 (Dados dos Transformadores) do Excel
+//              Retira as duas primeiras linhas (informações)
+//              Armazena todos os dados em uma variável do tipo Dados_de_linha (struct)
+//
+// Saida:       Retorna um map contendo os dados de todos transformadores
 func transformadores(tabela_excel *excelize.File) map[string]Dados_de_linha {
 
     dados_transformadores, err := tabela_excel.GetRows(tabela_excel.GetSheetList()[3])
     dados_transformadores = dados_transformadores[2:]
     geral.Valida_erro(err)
 
-    elementos_tipo_1 := make(map[string]Dados_de_linha)
+    elementos_transformadores := make(map[string]Dados_de_linha)
     for x := 0; x < len(dados_transformadores); x ++ {
 
         transformador := dados_transformadores[x][0] + "-" +dados_transformadores[x][1]
-        impedancia_atual := elementos_tipo_1[transformador].Impedancia_positiva
+        impedancia_atual := elementos_transformadores[transformador].Impedancia_positiva
 
-        elementos_tipo_1[transformador] = Dados_de_linha{
+        elementos_transformadores[transformador] = Dados_de_linha{
             De:	                    dados_transformadores[x][0],
             Para:	                dados_transformadores[x][1],
             Nome:	                dados_transformadores[x][2],
@@ -38,10 +45,17 @@ func transformadores(tabela_excel *excelize.File) map[string]Dados_de_linha {
         }
     }
 
-    return elementos_tipo_1
+    return elementos_transformadores
 }
 
 
+// Entrada:     Tabela do excel
+//
+// Processo:    Pega a tabela do 2 (Dados dos Geradores) do Excel
+//              Retira a primeira linha (informações)
+//              Armazena todos os dados em uma variável do tipo Dados_de_linha (struct)
+//
+// Saida:       Retorna um map contendo os dados de todos os elementos tipo 1
 func Elementos_tipo_1(tabela_excel *excelize.File) []Dados_de_linha {
     var elementos_tipo_1 []Dados_de_linha
 
@@ -62,6 +76,15 @@ func Elementos_tipo_1(tabela_excel *excelize.File) []Dados_de_linha {
 }
 
 
+// Entrada:     Tabela do excel
+//
+// Processo:    Pega a tabela do 1 (Dados de Linha) do Excel
+//              Retira as duas primeiras linhas (informações)
+//              Armazena todos os dados em uma variável do tipo Dados_de_linha (struct)
+//
+// Obs:         Pegamos os dados dos transformadores e passamos para cá, pois são elementos do tipo 2
+//
+// Saida:       Retorna um map contendo os dados de todos os elementos tipo 1
 func Elementos_tipo_2_3(tabela_excel *excelize.File) []Dados_de_linha {
     var elementos_tipo_2_3 []Dados_de_linha
 
