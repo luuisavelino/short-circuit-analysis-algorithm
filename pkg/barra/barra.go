@@ -1,8 +1,6 @@
 package barra
 
 import (
-	//"fmt"
-
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/geral"
 	"github.com/xuri/excelize/v2"
 )

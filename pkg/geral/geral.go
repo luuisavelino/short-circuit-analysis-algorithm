@@ -6,7 +6,6 @@ import (
 	"strconv"
 )
 
-
 // Entrada:     Resistencia, Reatancia, e a impedância atual
 // Processo:    Realiza o calculo da impedância
 //              Caso já exista uma impedância atual, ele irá realizar o paralelo entre eles
