@@ -2,7 +2,7 @@ package geral
 
 import (
 	"log"
-	"math"
+    "math"
 	"strconv"
 )
 
@@ -20,7 +20,7 @@ func Impedancia(resistencia_linha string, reatancia_linha string, impedancia_atu
         impedancia = (impedancia * impedancia_atual) / (impedancia + impedancia_atual)
     }
 
-    return math.Round(impedancia*10000)/10000
+    return impedancia
 }
 
 

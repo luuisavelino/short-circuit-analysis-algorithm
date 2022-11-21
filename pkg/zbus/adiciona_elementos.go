@@ -1,7 +1,7 @@
 package zbus
 
 import (
-	"fmt"
+	//"fmt"
 	"math"
 )
 
@@ -18,7 +18,7 @@ func Adiciona_elemento_tipo_2_na_zbus(zbus matrix, posicao_barra_conectada int, 
 		zbus[posicao][x] = zbus[posicao_barra_conectada][x]
 	}
 
-	zbus[posicao][posicao] = impedancia + zbus[posicao_barra_conectada][posicao_barra_conectada]
+	zbus[posicao][posicao] = math.Round( (impedancia + zbus[posicao_barra_conectada][posicao_barra_conectada]) * 10000) / 10000
 
 	return zbus
 }
@@ -48,14 +48,12 @@ func Adiciona_elemento_tipo_3_com_reducao_de_kron(zbus matrix, posicao_barra_de 
 		matriz_C[x] = zbus[posicao_barra_de][x] - zbus[posicao_barra_para][x]
 	}
 
-	fmt.Println(matriz_B)
-	fmt.Println(matriz_C)
-
 	matriz_D = zbus[posicao_barra_de][posicao_barra_de] + zbus[posicao_barra_para][posicao_barra_para] + (2 * zbus[posicao_barra_de][posicao_barra_para]) + impedancia
 	
 	for x := 0; x < 6; x++ {
 		for y := 0; y < 6; y++ {
-			zbus_reduzida[x][y] = math.Round( (zbus[x][y] - ((matriz_B[x] * matriz_C[y]) / matriz_D)) * 10000) / 10000
+			zbus_reduzida[x][y] = math.Round( (zbus[x][y] - ((matriz_B[x] * matriz_C[y]) / matriz_D)) * 100000) / 100000
+			//zbus_reduzida[x][y] = (zbus[x][y] - ((matriz_B[x] * matriz_C[y]) / matriz_D))
 		}
 	}
 

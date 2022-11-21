@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
     "github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
-    "github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/input"
+    "github.com/luuisavelino/short-circuit-analysis-algorithm/internal/input"
 
     //"fmt"
     //"time"
