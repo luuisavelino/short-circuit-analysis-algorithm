@@ -1,7 +1,7 @@
 package barra
 
 import (
-	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/geral"
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 	"github.com/xuri/excelize/v2"
 )
 

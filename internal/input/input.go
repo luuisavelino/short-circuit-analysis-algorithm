@@ -2,7 +2,7 @@ package input
 
 import (
 	"github.com/xuri/excelize/v2"
-	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/geral"
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 )
 
 func Tabela_excel() *excelize.File {
