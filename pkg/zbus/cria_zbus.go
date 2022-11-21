@@ -1,6 +1,8 @@
 package zbus
 
 import (
+	"fmt"
+
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 )
 
@@ -8,10 +10,14 @@ type posicao_zbus struct {
     Posicao   int
 }
 
+type matrix [6][6]float64
+
+
+
 func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Dados_de_linha) {
 
-    var zbus_positiva [50][50]float64
-    var zbus_zero [50][50]float64
+    var zbus_positiva matrix
+    var zbus_zero matrix
     var elementos_tipo_3 []barra.Dados_de_linha
 
     barras_adicionadas := make(map[string]posicao_zbus)
@@ -23,6 +29,9 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
 
         zbus_positiva = Adiciona_elemento_tipo_1_na_zbus(zbus_positiva, posicao, dados_linha.Impedancia_positiva)
         zbus_zero = Adiciona_elemento_tipo_1_na_zbus(zbus_zero, posicao, dados_linha.Impedancia_zero)
+
+
+        fmt.Println("Elemento tipo 1 -> Barra:" + dados_linha.De + ", Impedancia:", dados_linha.Impedancia_positiva)
 
         barras_adicionadas[dados_linha.De] = posicao_zbus{
             Posicao:    posicao,
@@ -51,6 +60,8 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
                 zbus_positiva = Adiciona_elemento_tipo_2_na_zbus(zbus_positiva, barras_adicionadas[linha.De].Posicao, posicao, linha.Impedancia_positiva)
                 zbus_zero = Adiciona_elemento_tipo_2_na_zbus(zbus_zero, barras_adicionadas[linha.De].Posicao, posicao, linha.Impedancia_zero)
 
+                fmt.Println("Elemento tipo 2 -> Barra: " + linha.De + "-" + linha.Para + ", Impedancia:", linha.Impedancia_positiva)
+
                 barras_adicionadas[linha.Para] = posicao_zbus{
                     Posicao:    posicao,
                 }
@@ -61,6 +72,8 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
             } else if existe_para {
                 zbus_positiva = Adiciona_elemento_tipo_2_na_zbus(zbus_positiva, barras_adicionadas[linha.Para].Posicao, posicao, linha.Impedancia_positiva)
                 zbus_zero = Adiciona_elemento_tipo_2_na_zbus(zbus_zero, barras_adicionadas[linha.Para].Posicao, posicao, linha.Impedancia_zero)
+
+                fmt.Println("Elemento tipo 2 -> Barra: " + linha.De + "-" + linha.Para + ", Impedancia:", linha.Impedancia_positiva)
 
                 barras_adicionadas[linha.De] = posicao_zbus{
                     Posicao:    posicao,
@@ -77,11 +90,18 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
     for x := 0; x < len(elementos_tipo_3); x++ {
         linha := elementos_tipo_3[x]
 
-        zbus_positiva = Adiciona_elemento_tipo_3_na_zbus(zbus_positiva, barras_adicionadas[linha.De].Posicao, barras_adicionadas[linha.Para].Posicao, posicao, linha.Impedancia_positiva)
-        zbus_zero = Adiciona_elemento_tipo_3_na_zbus(zbus_zero, barras_adicionadas[linha.De].Posicao, barras_adicionadas[linha.Para].Posicao, posicao, linha.Impedancia_zero)
+        fmt.Println("Elemento tipo 3 -> Barra: " + linha.De + "-" + linha.Para + ", Impedancia:", linha.Impedancia_positiva, " \tRealizando redução de Kron")
 
-        posicao++
+        zbus_positiva = Adiciona_elemento_tipo_3_com_reducao_de_kron(zbus_positiva, barras_adicionadas[linha.De].Posicao, barras_adicionadas[linha.Para].Posicao, linha.Impedancia_positiva)
+        zbus_zero = Adiciona_elemento_tipo_3_com_reducao_de_kron(zbus_zero, barras_adicionadas[linha.De].Posicao, barras_adicionadas[linha.Para].Posicao, linha.Impedancia_zero)
+
     }
+
+
+    fmt.Println(zbus_positiva)
+
+
+
 }
 
 func RemoveIndex(s []barra.Dados_de_linha, index int) []barra.Dados_de_linha {

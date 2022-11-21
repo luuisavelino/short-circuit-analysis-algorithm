@@ -6,7 +6,7 @@ import (
 )
 
 func Tabela_excel() *excelize.File {
-    tabela_excel, err := excelize.OpenFile("../data/dados_acch.xlsx")
+    tabela_excel, err := excelize.OpenFile("../data/exemplo_de_aula.xlsx")
     geral.Valida_erro(err)
 
     return tabela_excel
