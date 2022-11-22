@@ -39,3 +39,9 @@ func Valida_erro(err error) {
         return
     }
 }
+
+
+func Round(valor float64, casas float64) float64 {
+
+	return math.Round( valor * (math.Pow(10, casas))) / (math.Pow(10, casas))
+}
