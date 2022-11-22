@@ -37,12 +37,12 @@ func Adiciona_elemento_tipo_3_na_zbus(zbus matrix, posicao_barra_de int, posicao
 
 func Adiciona_elemento_tipo_3_com_reducao_de_kron(zbus matrix, posicao_barra_de int, posicao_barra_para int, impedancia float64) matrix {
 	
-	var matriz_B [6]float64
-	var matriz_C [6]float64
+	var matriz_B [Tamanho_do_sistema]float64
+	var matriz_C [Tamanho_do_sistema]float64
 	var matriz_D float64
 	var zbus_reduzida matrix	
 
-	for x := 0; x < 6; x++ {
+	for x := 0; x < Tamanho_do_sistema; x++ {
 		matriz_B[x] = zbus[x][posicao_barra_de] - zbus[x][posicao_barra_para]
 		matriz_C[x] = zbus[posicao_barra_de][x] - zbus[posicao_barra_para][x]
 	}

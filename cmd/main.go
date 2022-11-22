@@ -5,13 +5,13 @@ import (
     "github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
     "github.com/luuisavelino/short-circuit-analysis-algorithm/internal/input"
 
-    //"fmt"
-    //"time"
+    "fmt"
+    "time"
 )
 
 func main() {
 
-    // start := time.Now()
+    start := time.Now()
 
 
     //barra.Barras_do_sistema(input.Tabela_excel())
@@ -21,6 +21,6 @@ func main() {
 
     zbus.Zbus(tipo_1, tipo_2_3)
 
-    // duration := time.Since(start)
-    // fmt.Println(duration)
+
+    fmt.Println("\nO tempo de execução foi de", time.Since(start))
 }
