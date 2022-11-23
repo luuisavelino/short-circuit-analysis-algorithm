@@ -2,7 +2,8 @@ package zbus
 
 import (
 	"fmt"
-    // "log"
+
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 )
 
@@ -89,7 +90,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
             }
         }
     }
-   
+
     // Com a lista criada de elementos do tipo 3, adicionamos na Zbus
     for x := 0; x < len(elementos_tipo_3); x++ {
         linha := elementos_tipo_3[x]
@@ -101,10 +102,10 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
 
     }
 
-    fmt.Println("\n\nA matriz Zbus do sistema é: ")
+    fmt.Println("\nA matriz Zbus do sistema é: ")
     for x := 0; x < Tamanho_do_sistema; x++ {
         for y := 0; y < Tamanho_do_sistema; y++ {
-            fmt.Printf("\t%v\t", zbus_positiva[x][y])
+            fmt.Printf("\t%v\t", geral.Round(zbus_positiva[x][y], 4))
         }
         fmt.Println("")
     }

@@ -51,7 +51,7 @@ func Adiciona_elemento_tipo_3_com_reducao_de_kron(zbus matrix, posicao_barra_de 
 
 	for x := 0; x < 6; x++ {
 		for y := 0; y < 6; y++ {
-			zbus_reduzida[x][y] = geral.Round((zbus[x][y] - ((matriz_B[x] * matriz_C[y]) / matriz_D)), 5)
+			zbus_reduzida[x][y] = (zbus[x][y] - ((matriz_B[x] * matriz_C[y]) / matriz_D))
 		}
 	}
 

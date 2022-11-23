@@ -4,12 +4,13 @@ import (
 	//"math"
 )
 
+const frequencia_da_rede = 60
 
 
 func tempo_critico(potencia_max_pos, potencia_media float64) {
 
 	//H := 5.0
-	//Ws := 2 * math.Pi * 60
+	//Ws := 2 * math.Pi * frequencia_da_rede
 	//var Xd, V_1, V_2 float64
 	//complex128 
 
