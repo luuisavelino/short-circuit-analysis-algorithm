@@ -4,13 +4,13 @@ import (
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 )
 
-func Adiciona_elemento_tipo_1_na_zbus(zbus matrix, posicao int, impedancia float64) matrix {
+func Adiciona_elemento_tipo_1_na_zbus(zbus Matrix, posicao int, impedancia float64) Matrix {
 	zbus[posicao][posicao] = impedancia
 
 	return zbus
 }
 
-func Adiciona_elemento_tipo_2_na_zbus(zbus matrix, posicao_barra_conectada int, posicao int, impedancia float64) matrix {
+func Adiciona_elemento_tipo_2_na_zbus(zbus Matrix, posicao_barra_conectada int, posicao int, impedancia float64) Matrix {
 
 	for x := 0; x < posicao; x++ {
 		zbus[x][posicao] = zbus[x][posicao_barra_conectada]
@@ -22,7 +22,7 @@ func Adiciona_elemento_tipo_2_na_zbus(zbus matrix, posicao_barra_conectada int, 
 	return zbus
 }
 
-func Adiciona_elemento_tipo_3_na_zbus(zbus matrix, posicao_barra_de int, posicao_barra_para int, posicao int, impedancia float64) matrix {
+func Adiciona_elemento_tipo_3_na_zbus(zbus Matrix, posicao_barra_de int, posicao_barra_para int, posicao int, impedancia float64) Matrix {
 
 	for x := 0; x < posicao; x++ {
 		zbus[x][posicao] = zbus[x][posicao_barra_de] - zbus[x][posicao_barra_para]
@@ -35,12 +35,12 @@ func Adiciona_elemento_tipo_3_na_zbus(zbus matrix, posicao_barra_de int, posicao
 }
 
 
-func Adiciona_elemento_tipo_3_com_reducao_de_kron(zbus matrix, posicao_barra_de int, posicao_barra_para int, impedancia float64) matrix {
+func Adiciona_elemento_tipo_3_com_reducao_de_kron(zbus Matrix, posicao_barra_de int, posicao_barra_para int, impedancia float64) Matrix {
 	
 	var matriz_B [Tamanho_do_sistema]float64
 	var matriz_C [Tamanho_do_sistema]float64
 	var matriz_D float64
-	var zbus_reduzida matrix	
+	var zbus_reduzida Matrix	
 
 	for x := 0; x < Tamanho_do_sistema; x++ {
 		matriz_B[x] = zbus[x][posicao_barra_de] - zbus[x][posicao_barra_para]
@@ -49,8 +49,8 @@ func Adiciona_elemento_tipo_3_com_reducao_de_kron(zbus matrix, posicao_barra_de 
 
 	matriz_D = geral.Round(zbus[posicao_barra_de][posicao_barra_de] + zbus[posicao_barra_para][posicao_barra_para] - (2 * zbus[posicao_barra_de][posicao_barra_para]) + impedancia, 5)
 
-	for x := 0; x < 6; x++ {
-		for y := 0; y < 6; y++ {
+	for x := 0; x < Tamanho_do_sistema; x++ {
+		for y := 0; y < Tamanho_do_sistema; y++ {
 			zbus_reduzida[x][y] = (zbus[x][y] - ((matriz_B[x] * matriz_C[y]) / matriz_D))
 		}
 	}

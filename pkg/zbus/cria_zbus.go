@@ -9,23 +9,22 @@ import (
 
 
 
-type posicao_zbus struct {
+type Posicao_zbus struct {
     Posicao   int
 }
 
 const Tamanho_do_sistema = 6
 
-type matrix [Tamanho_do_sistema][Tamanho_do_sistema]float64
+type Matrix [Tamanho_do_sistema][Tamanho_do_sistema]float64
 
 
+func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Dados_de_linha) (Matrix, Matrix, map[string]Posicao_zbus) {
 
-func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Dados_de_linha) {
-
-    var zbus_positiva matrix
-    var zbus_zero matrix
+    var zbus_positiva Matrix
+    var zbus_zero Matrix
     var elementos_tipo_3 []barra.Dados_de_linha
 
-    barras_adicionadas := make(map[string]posicao_zbus)
+    barras_adicionadas := make(map[string]Posicao_zbus)
     posicao := 0
 
     // Adiciona os elementos do tipo 1
@@ -38,7 +37,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
 
         fmt.Println("Adicionado elemento tipo 1 -> Barra: " + dados_linha.De + "\t\tImpedancia:", dados_linha.Impedancia_positiva)
 
-        barras_adicionadas[dados_linha.De] = posicao_zbus{
+        barras_adicionadas[dados_linha.De] = Posicao_zbus{
             Posicao:    posicao,
         }
 
@@ -67,7 +66,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
 
                 fmt.Println("Adicionado elemento tipo 2 -> Linha: " + linha.De + "-" + linha.Para + "\tImpedancia:", linha.Impedancia_positiva)
 
-                barras_adicionadas[linha.Para] = posicao_zbus{
+                barras_adicionadas[linha.Para] = Posicao_zbus{
                     Posicao:    posicao,
                 }
 
@@ -80,7 +79,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
 
                 fmt.Println("Adicionado elemento tipo 2 -> Linha: " + linha.De + "-" + linha.Para + "\tImpedancia:", linha.Impedancia_positiva)
 
-                barras_adicionadas[linha.De] = posicao_zbus{
+                barras_adicionadas[linha.De] = Posicao_zbus{
                     Posicao:    posicao,
                 }
 
@@ -109,6 +108,8 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
         }
         fmt.Println("")
     }
+
+    return zbus_positiva, zbus_zero, barras_adicionadas
 }
 
 func RemoveIndex(s []barra.Dados_de_linha, index int) []barra.Dados_de_linha {

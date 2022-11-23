@@ -1,4 +1,4 @@
-package faltas
+package falta
 
 import (
 	//"math"
