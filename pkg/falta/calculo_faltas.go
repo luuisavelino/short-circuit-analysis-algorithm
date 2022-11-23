@@ -5,6 +5,7 @@ import (
 
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 )
 
 
@@ -17,12 +18,10 @@ func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zb
 	var tamanho_do_sistema int = len(zbus)
 
 
-	fmt.Println(elementos_tipo_2_3)
-
 	posicao := barras_sistema[barra_curto_circuito].Posicao
 	corrente_curto_circuito := 1 / zbus[posicao][posicao]
 
-	fmt.Printf("\nA corrente de curto circuito na barra %v é %v A\n", barra_curto_circuito, corrente_curto_circuito)
+	fmt.Printf("\nA corrente de curto circuito na barra %v é %v pu\n", barra_curto_circuito, geral.Round(corrente_curto_circuito, 4))
 
 	for x := 0; x < tamanho_do_sistema; x++ {
 		tensao := 1 - (zbus[x][posicao] * corrente_curto_circuito)
@@ -31,7 +30,7 @@ func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zb
 
 	fmt.Println("As tensões nas barras são:")
 	for barra, posicao := range barras_sistema {
-		fmt.Println("\tBarra " + barra + " =", tensoes_barras[posicao.Posicao], "V")
+		fmt.Println("\tBarra " + barra + " =", geral.Round(tensoes_barras[posicao.Posicao], 4), "pu")
     } 
 
 	// Encontrando a corrente em cada ramo:
@@ -44,11 +43,9 @@ func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zb
     }
 
 
-	
-
 	fmt.Println("As correntes nos ramos são:")
 	for posicao, linha := range elementos_tipo_2_3 {
-		fmt.Println("\tDe", linha.De, "Para", linha.Para, "=", corrente_nos_ramos[posicao], "A")
+		fmt.Println("\tBarra", linha.De, "para", linha.Para, "=", geral.Round(corrente_nos_ramos[posicao], 4), "pu")
     } 
 
 }
