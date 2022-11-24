@@ -4,10 +4,10 @@ import (
 	//"math"
 )
 
-const frequencia_da_rede = 60
+// const frequencia_da_rede = 60
 
 
-func tempo_critico(potencia_max_pos, potencia_media float64) {
+//func tempo_critico(potencia_max_pos, potencia_media float64) {
 
 	//H := 5.0
 	//Ws := 2 * math.Pi * frequencia_da_rede
@@ -30,4 +30,4 @@ func tempo_critico(potencia_max_pos, potencia_media float64) {
 	//tempo := math.Sqrt((4 * H * (delta_c - delta_0)) / (Ws * potencia_media))
 
 	//return delta_c, tempo
-}
+//}

@@ -22,18 +22,6 @@ func Adiciona_elemento_tipo_2_na_zbus(zbus Matrix, posicao_barra_conectada int, 
 	return zbus
 }
 
-func Adiciona_elemento_tipo_3_na_zbus(zbus Matrix, posicao_barra_de int, posicao_barra_para int, posicao int, impedancia float64) Matrix {
-
-	for x := 0; x < posicao; x++ {
-		zbus[x][posicao] = zbus[x][posicao_barra_de] - zbus[x][posicao_barra_para]
-		zbus[posicao][x] = zbus[posicao_barra_de][x] - zbus[posicao_barra_para][x]
-	}
-
-	zbus[posicao][posicao] = zbus[posicao_barra_de][posicao_barra_de] + zbus[posicao_barra_para][posicao_barra_para] + (2 * zbus[posicao_barra_de][posicao_barra_para]) + impedancia
-
-	return zbus
-}
-
 
 func Adiciona_elemento_tipo_3_com_reducao_de_kron(zbus Matrix, posicao_barra_de int, posicao_barra_para int, impedancia float64, tamanho_do_sistema int) Matrix {
 	

@@ -13,20 +13,16 @@ type Posicao_zbus struct {
     Posicao   int
 }
 
-const Tamanho_do_sistema = 6
-
 type Matrix = [][]float64
 
 
-func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Dados_de_linha) (Matrix, Matrix, map[string]Posicao_zbus) {
-
-    var zbus_positiva = Preenche_matriz_com_zeros(Tamanho_do_sistema) 
-    var zbus_zero = Preenche_matriz_com_zeros(Tamanho_do_sistema) 
+func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 map[string]barra.Dados_de_linha, tamanho_do_sistema int) (Matrix, Matrix, map[string]Posicao_zbus) {
+    var zbus_positiva = Preenche_matriz_com_zeros(tamanho_do_sistema) 
+    var zbus_zero = Preenche_matriz_com_zeros(tamanho_do_sistema) 
 
     var elementos_tipo_3 []barra.Dados_de_linha
     var barras_adicionadas = make(map[string]Posicao_zbus)
     var posicao = 0
-
 
     // Adiciona os elementos do tipo 1
     // Loop passando por todos os elementos do tipo 1, e adicionando cada um na matriz Zbus
@@ -45,21 +41,18 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
         posicao++
     }
 
-
     // Adiciona os elementos do tipo 2
     // Valida se o elemento é do tipo 2, caso seja, adiciona na Zbus
     // Caso o elemento seja do tipo 3, ele adiciona em uma lista que será utilizada futuramente para adicionar os elementos tipo 3
     for len(elementos_tipo_2_3) != 0 {
-        for x := 0; x < len(elementos_tipo_2_3); x++ {
-
-            linha := elementos_tipo_2_3[x]
+        for nome_linha, linha := range elementos_tipo_2_3 {
 
             _, existe_de := barras_adicionadas[linha.De]
             _, existe_para := barras_adicionadas[linha.Para]
-   
+
             if existe_de && existe_para {
                 elementos_tipo_3 = append(elementos_tipo_3, linha)
-                elementos_tipo_2_3 = RemoveIndex(elementos_tipo_2_3, x)
+                delete(elementos_tipo_2_3, nome_linha)
 
             } else if existe_de {
                 zbus_positiva = Adiciona_elemento_tipo_2_na_zbus(zbus_positiva, barras_adicionadas[linha.De].Posicao, posicao, linha.Impedancia_positiva)
@@ -71,7 +64,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
                     Posicao:    posicao,
                 }
 
-                elementos_tipo_2_3 = RemoveIndex(elementos_tipo_2_3, x)
+                delete(elementos_tipo_2_3, nome_linha)
                 posicao++
 
             } else if existe_para {
@@ -84,7 +77,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
                     Posicao:    posicao,
                 }
 
-                elementos_tipo_2_3 = RemoveIndex(elementos_tipo_2_3, x)
+                delete(elementos_tipo_2_3, nome_linha)
                 posicao++
 
             }
@@ -102,41 +95,35 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 []barra.Da
             barras_adicionadas[linha.De].Posicao, 
             barras_adicionadas[linha.Para].Posicao, 
             linha.Impedancia_positiva, 
-            Tamanho_do_sistema)
+            tamanho_do_sistema)
         zbus_zero = Adiciona_elemento_tipo_3_com_reducao_de_kron(
             zbus_zero, 
             barras_adicionadas[linha.De].Posicao, 
             barras_adicionadas[linha.Para].Posicao, 
             linha.Impedancia_zero, 
-            Tamanho_do_sistema)
+            tamanho_do_sistema)
     }
 
+
     fmt.Println("\nA matriz Zbus do sistema é: ")
-    for x := 0; x < Tamanho_do_sistema; x++ {
-        for y := 0; y < Tamanho_do_sistema; y++ {
-            fmt.Printf("\t%v\t", geral.Round(zbus_positiva[x][y], 4))
+    for x := 0; x < tamanho_do_sistema; x++ {
+        for y := 0; y < tamanho_do_sistema; y++ {
+            fmt.Printf("%v\t", geral.Round(zbus_positiva[x][y], 4))
         }
         fmt.Println("")
     }
 
 
-    fmt.Println("a capacidade é", cap(zbus_zero))
-    fmt.Println("o tamanho é", len(zbus_zero))
-
     return zbus_positiva, zbus_zero, barras_adicionadas
-}
-
-func RemoveIndex(s []barra.Dados_de_linha, index int) []barra.Dados_de_linha {
-	return append(s[:index], s[index+1:]...)
 }
 
 func Preenche_matriz_com_zeros(tamanho int) Matrix {
     var matrix_com_zeros = make(Matrix, 0)
 
     // Adiciona elementos 0 na matriz zbus
-    for i := 0; i <= tamanho; i++ {
+    for i := 0; i < tamanho; i++ {
         temp := make([]float64, 0)
-        for j := 0; j <= tamanho; j++ {
+        for j := 0; j < tamanho; j++ {
             temp = append(temp, 0)
         }
 
@@ -144,4 +131,20 @@ func Preenche_matriz_com_zeros(tamanho int) Matrix {
     }
 
     return matrix_com_zeros
+}
+
+func Aumenta_tamanho_da_matriz(matrix Matrix) Matrix {
+
+    temp := make([]float64, 0)
+    for j := 0; j <= len(matrix); j++ {
+        temp = append(temp, 0)
+    }
+
+    matrix = append(matrix, Matrix{temp}...)
+
+    for i := 0; i < len(matrix); i++ {
+        matrix[i] = append(matrix[i], 0)
+    }
+
+    return matrix
 }

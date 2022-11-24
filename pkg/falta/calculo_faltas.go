@@ -9,12 +9,10 @@ import (
 )
 
 
-
-
-func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, barra_curto_circuito string, elementos_tipo_2_3 []barra.Dados_de_linha) {
+func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, barra_curto_circuito string, elementos_tipo_2_3 map[string]barra.Dados_de_linha) {
 
 	var tensoes_barras []float64
-	var corrente_nos_ramos []float64
+	var corrente_nos_ramos = make(map[string]float64)
 	var tamanho_do_sistema int = len(zbus)
 
 
@@ -34,18 +32,14 @@ func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zb
     } 
 
 	// Encontrando a corrente em cada ramo:
-	for x := 0; x < len(elementos_tipo_2_3); x++ {
-		posicao_de := barras_sistema[elementos_tipo_2_3[x].De].Posicao
-		posicao_para := barras_sistema[elementos_tipo_2_3[x].Para].Posicao
-		corrente := (tensoes_barras[posicao_de] - tensoes_barras[posicao_para]) / elementos_tipo_2_3[x].Impedancia_positiva
-
-		corrente_nos_ramos = append(corrente_nos_ramos, corrente)
-    }
-
-
 	fmt.Println("As correntes nos ramos são:")
-	for posicao, linha := range elementos_tipo_2_3 {
-		fmt.Println("\tBarra", linha.De, "para", linha.Para, "=", geral.Round(corrente_nos_ramos[posicao], 4), "pu")
-    } 
+	for nome_linha, barra := range elementos_tipo_2_3 {
+		posicao_de := barras_sistema[barra.De].Posicao
+		posicao_para := barras_sistema[barra.Para].Posicao
+		corrente := (tensoes_barras[posicao_de] - tensoes_barras[posicao_para]) / barra.Impedancia_positiva
 
+		corrente_nos_ramos[nome_linha] = corrente
+
+		fmt.Println("\tBarra", barra.De, "para", barra.Para, "=", geral.Round(corrente, 4), "pu")
+    }
 }
