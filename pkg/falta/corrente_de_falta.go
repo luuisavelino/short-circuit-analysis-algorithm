@@ -2,40 +2,63 @@ package falta
 
 import (
 	"fmt"
-
+	"math"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
 )
 
-func Corrente_falta_monofasica(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, barra_curto_circuito string) (Componente_de_sequencia) {
+func Corrente_falta_monofasica(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, barra_curto_circuito string) (Componente_de_fase, Componente_de_sequencia) {
 
 	Vf := 1.0 //pu
 
 	posicao_na_zbus := barras_sistema[barra_curto_circuito].Posicao
 
-	// Corrente de falta na fase A
-	If_sequencia := Vf / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_zero[posicao_na_zbus][posicao_na_zbus])
+	Icc_a := (3 * Vf) / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_zero[posicao_na_zbus][posicao_na_zbus])
 
 	// Circuito aberto, não há corrente de falta monofasica
 	if zbus_zero[posicao_na_zbus][posicao_na_zbus] == 0 {
-		If_sequencia = 0
+		Icc_a = 0
 	}
 
-	If_monofasica := Componente_de_sequencia{
-		Sequencia_positiva:	If_sequencia,
-		Sequencia_negativa:	If_sequencia,
-		Sequencia_zero:		If_sequencia,
+	Icc_fase := Componente_de_fase{
+		A:	complex(Icc_a, 0),
+		B:	0,
+		C:	0,
 	}
 
-	fmt.Println("A corrente de falta na fase A é de", If_sequencia * 3, "pu")
+	Icc_sequencia := Componente_de_sequencia{
+		Sequencia_positiva:	Icc_a / 3,
+		Sequencia_negativa:	Icc_a / 3,
+		Sequencia_zero:		Icc_a / 3,
+	}
 
-	return If_monofasica
+	fmt.Println("A corrente de falta na fase A é de", Icc_a, "pu")
+
+	return Icc_fase, Icc_sequencia
 }
 
 
-func Corrente_falta_bifasica() {
-	
+func Corrente_falta_bifasica(zbus_positiva zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, barra_curto_circuito string) (Componente_de_fase, Componente_de_sequencia) {
+	var Icc_f float64
+	var Vf float64 = 1.0 //pu
+
+	posicao_na_zbus := barras_sistema[barra_curto_circuito].Posicao
+	Icc_a_positivo := Vf / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_positiva[posicao_na_zbus][posicao_na_zbus])
+
+	Icc_fase := Componente_de_fase{
+		A:	0,
+		B:	complex(0, -math.Sqrt(3) * Icc_f),
+		C:	complex(0, math.Sqrt(3) * Icc_f),
+	}
+
+	Icc_sequencia := Componente_de_sequencia{
+		Sequencia_positiva:	Icc_a_positivo,
+		Sequencia_negativa:	-Icc_a_positivo,
+		Sequencia_zero:		0,
+	}
+
+	return Icc_fase, Icc_sequencia
 }
 
 func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, barra_curto_circuito string, elementos_tipo_2_3 map[string]barra.Dados_de_linha) {
