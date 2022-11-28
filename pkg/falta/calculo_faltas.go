@@ -25,6 +25,13 @@ type Tensao_de_sequencia struct {
 }
 
 
+type Tensao_de_fase struct {
+	A	complex128
+	B	complex128
+	C	complex128
+}
+
+
 type Corrente_de_sequencia struct {
 	Sequencia_positiva	float64
 	Sequencia_negativa	float64
@@ -32,7 +39,7 @@ type Corrente_de_sequencia struct {
 }
 
 
-type Tensao_de_fase struct {
+type Corrente_de_fase struct {
 	A	complex128
 	B	complex128
 	C	complex128
@@ -146,20 +153,20 @@ func Tensoes_de_fase(barras_sistema map[string]zbus.Posicao_zbus, tensoes_sequen
 }
 
 
-func Correntes_nas_linhas(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, tensoes_sequencia map[string]Tensao_de_sequencia, elementos_tipo_2_3 map[string]barra.Dados_de_linha, barras_sistema map[string]zbus.Posicao_zbus) (map[string]Corrente_de_sequencia) {
+func Correntes_de_sequencia_nas_linhas(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, tensoes_sequencia map[string]Tensao_de_sequencia, elementos_tipo_2_3 map[string]barra.Dados_de_linha, barras_sistema map[string]zbus.Posicao_zbus) (map[string]Corrente_de_sequencia) {
 
-	var corrente_na_linha = make(map[string]Corrente_de_sequencia)
+	var corrente_de_sequencia_na_linha = make(map[string]Corrente_de_sequencia)
 
 	for nome_linha, linha := range elementos_tipo_2_3 {
 		posicao_de := barras_sistema[linha.De].Posicao
 		posicao_para := barras_sistema[linha.Para].Posicao
 
-		corrente_na_linha[nome_linha] = Corrente_de_sequencia{
+		corrente_de_sequencia_na_linha[nome_linha] = Corrente_de_sequencia{
 			Sequencia_positiva: (tensoes_sequencia[linha.De].Sequencia_positiva - tensoes_sequencia[linha.Para].Sequencia_positiva) / zbus_positiva[posicao_de][posicao_para],
 			Sequencia_negativa: (tensoes_sequencia[linha.De].Sequencia_negativa - tensoes_sequencia[linha.Para].Sequencia_negativa) / zbus_positiva[posicao_de][posicao_para],
 			Sequencia_zero: 	(tensoes_sequencia[linha.De].Sequencia_zero - tensoes_sequencia[linha.Para].Sequencia_zero) / zbus_zero[posicao_de][posicao_para],
 		}
     }
 
-	return corrente_na_linha
+	return corrente_de_sequencia_na_linha
 }
