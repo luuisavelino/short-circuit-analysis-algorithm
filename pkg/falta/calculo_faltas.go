@@ -43,3 +43,28 @@ func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zb
 		fmt.Println("\tBarra", barra.De, "para", barra.Para, "=", geral.Round(corrente, 4), "pu")
     }
 }
+
+
+func Corrente_falta_monofasica(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, barra_curto_circuito string) (float64, float64, float64, float64) {
+
+	Vf := 1.0 //pu
+
+	posicao_na_zbus := barras_sistema[barra_curto_circuito].Posicao
+
+	// Corrente de falta na fase A
+	If_sequencia := Vf / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_zero[posicao_na_zbus][posicao_na_zbus])
+
+	// Circuito aberto, não há corrente de falta monofasica
+	if zbus_zero[posicao_na_zbus][posicao_na_zbus] == 0 {
+		If_sequencia = 0
+	}
+
+	fmt.Println("A corrente de falta na fase A é de", 3*If_sequencia, "pu")
+
+	// Retornando a corrente de falta na fase A
+	// Componente de sequencia positiva
+	// Componente de sequencia negativa
+	// Componente de sequencia zero
+	return 3*If_sequencia, If_sequencia, If_sequencia, If_sequencia
+}
+

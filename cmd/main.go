@@ -17,7 +17,7 @@ func main() {
     curto_circuito := input.Ponto_curto_circuito{
         De:     "2",
         Para:   "3",
-        Ponto:  50,
+        Ponto:  0,
     }
 
     var barra_curto_circuito string
