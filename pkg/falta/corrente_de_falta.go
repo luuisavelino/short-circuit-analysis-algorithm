@@ -33,7 +33,9 @@ func Corrente_falta_monofasica(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix,
 		Sequencia_zero:		Icc_a / 3,
 	}
 
-	fmt.Println("A corrente de falta na fase A é de", Icc_a, "pu")
+	fmt.Println("As correntes de falta monofasica são:")
+	fmt.Println(Icc_fase)
+	fmt.Println(Icc_sequencia)
 
 	return Icc_fase, Icc_sequencia
 }

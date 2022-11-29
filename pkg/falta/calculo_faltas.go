@@ -78,15 +78,15 @@ func Correntes_de_sequencia_nas_linhas(zbus_positiva zbus.Matrix, zbus_zero zbus
 
 func Corrente_na_linha(corrente_de_sequencia_na_linha map[string]Componente_de_sequencia) (map[string]Componente_de_fase) {
 
-	var correntes = make(map[string]Componente_de_fase)
+	var corrente_de_fase_na_linha = make(map[string]Componente_de_fase)
 
 	for nome_linha, linha := range corrente_de_sequencia_na_linha {
-		correntes[nome_linha] = Componente_de_fase{
+		corrente_de_fase_na_linha[nome_linha] = Componente_de_fase{
 			A:	complex(linha.Sequencia_zero, 0) + complex(linha.Sequencia_positiva, 0) + complex(linha.Sequencia_negativa, 0),
 			B:	complex(linha.Sequencia_zero, 0) + a*a * complex(linha.Sequencia_positiva, 0) + a * complex(linha.Sequencia_negativa, 0),
 			C:	complex(linha.Sequencia_zero, 0) + a * complex(linha.Sequencia_positiva, 0) + a*a * complex(linha.Sequencia_negativa, 0),
 		}
 	}
 
-	return correntes
+	return corrente_de_fase_na_linha
 }
