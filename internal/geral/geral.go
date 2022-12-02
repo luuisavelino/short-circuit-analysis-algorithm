@@ -2,7 +2,7 @@ package geral
 
 import (
 	"log"
-    "math"
+    //"math"
 	"strconv"
 )
 
@@ -10,12 +10,12 @@ import (
 // Processo:    Realiza o calculo da impedância
 //              Caso já exista uma impedância atual, ele irá realizar o paralelo entre eles
 // Saída:       Retorna o valor da impedância
-func Impedancia(resistencia_linha string, reatancia_linha string, impedancia_atual float64) float64 {
-    resistencia, _ := strconv.ParseFloat(resistencia_linha, 64)
-    reatancia, _ := strconv.ParseFloat(reatancia_linha, 64)
+func Impedancia(resistencia_linha string, reatancia_linha string, impedancia_atual complex128) complex128 {
+    var resistencia, _ = strconv.ParseFloat(resistencia_linha, 64)
+    var reatancia, _ = strconv.ParseFloat(reatancia_linha, 64)
 
-    impedancia := math.Sqrt(math.Pow(resistencia, 2) + math.Pow(reatancia, 2))
-    
+    impedancia := complex(resistencia, reatancia)
+
     if impedancia_atual != 0 {
         impedancia = (impedancia * impedancia_atual) / (impedancia + impedancia_atual)
     }
@@ -35,13 +35,16 @@ func String_para_float(grandeza_str string) float64 {
 // Realiza a validação do erro
 func Valida_erro(err error) {
     if err != nil {
-        log.Fatal(err)
+        log.Fatal(err.Error())
         return
     }
 }
 
 
-func Round(valor float64, casas float64) float64 {
+// Arredondamento para uma determinada quantidade de casas decimais
+func Round(valor complex128, casas float64) {
 
-	return math.Round( valor * (math.Pow(10, casas))) / (math.Pow(10, casas))
+    //var convesao complex128 = complex(math.Pow(10, casas), 0)
+
+	//return math.Round( (valor * convesao) / convesao)
 }

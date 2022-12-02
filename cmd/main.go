@@ -1,14 +1,14 @@
 package main
 
 import (
-    "github.com/luuisavelino/short-circuit-analysis-algorithm/internal/input"
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/input"
 
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
-    "github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
-    "github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/falta"
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/falta"
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
 
-    "fmt"
-    "time"
+	"fmt"
+	"time"
 )
 
 func main() {
@@ -34,25 +34,49 @@ func main() {
 
     elementos_tipo_1 := barra.Elementos_tipo_1(input.Tabela_excel())
     elementos_tipo_2_3 := barra.Elementos_tipo_2_3(input.Tabela_excel(), curto_circuito)
-    
-    zbus_positiva, zbus_zero, barras_sistema := zbus.Zbus(elementos_tipo_1, elementos_tipo_2_3, tamanho_do_sistema)
 
+    // Constroi a matriz Zbus do sistema
+    zbus_positiva, zbus_zero, barras_sistema := zbus.Zbus(elementos_tipo_1, elementos_tipo_2_3, tamanho_do_sistema)
     fmt.Println("=====================================================")
+
+    fmt.Println("\nA matriz Zbus positiva e negativa do sistema é: ")
+    for x := 0; x < tamanho_do_sistema; x++ {
+        for y := 0; y < tamanho_do_sistema; y++ {
+            fmt.Printf("    %v\t", zbus_positiva[x][y])
+        }
+        fmt.Println("")
+    }
+
+    fmt.Println("\nA matriz Zbus do sistema é: ")
+    for x := 0; x < tamanho_do_sistema; x++ {
+        for y := 0; y < tamanho_do_sistema; y++ {
+            fmt.Printf("\t%v\t", zbus_zero[x][y])
+        }
+        fmt.Println("")
+    }
+
+
+    // Debug
+
+    //Falta trifásica
     falta.Falta_trifasica(zbus_positiva, barras_sistema, barra_curto_circuito, barra.Elementos_tipo_2_3(input.Tabela_excel(), curto_circuito))
     fmt.Println("=====================================================")
-    _, Icc_bifasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
-    fmt.Println("\nAs tensões de sequencia são:")
-    tensoes_sequencia := falta.Tensoes_de_sequencia(zbus_positiva, zbus_zero, barras_sistema, Icc_bifasica_sequencia)
-    fmt.Println(tensoes_sequencia)
-    fmt.Println("\nAs tensões de fase são:")
-    tensoes_fase := falta.Tensoes_de_fase(barras_sistema, tensoes_sequencia)
-    fmt.Println(tensoes_fase)
-    fmt.Println("\nAs correntes de sequencia nas linhas são:")
-    corrente_de_sequencia_na_linha := falta.Correntes_de_sequencia_nas_linhas(zbus_positiva, zbus_zero, tensoes_sequencia, barra.Elementos_tipo_2_3(input.Tabela_excel(), curto_circuito), barras_sistema)
-    fmt.Println(corrente_de_sequencia_na_linha)
-    fmt.Println("\nAs correntes de fase nas linhas são:")
-    corrente_de_fase_na_linha := falta.Corrente_na_linha(corrente_de_sequencia_na_linha)
-    fmt.Println(corrente_de_fase_na_linha)
+
+
+    //_, Icc_bifasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
+    //fmt.Println("\nAs tensões de sequencia são:")
+    //tensoes_sequencia := falta.Tensoes_de_sequencia(zbus_positiva, zbus_zero, barras_sistema, Icc_bifasica_sequencia)
+    //fmt.Println(tensoes_sequencia)
+    //fmt.Println("\nAs tensões de fase são:")
+    //tensoes_fase := falta.Tensoes_de_fase(barras_sistema, tensoes_sequencia)
+    //fmt.Println(tensoes_fase)
+    //fmt.Println("\nAs correntes de sequencia nas linhas são:")
+    //corrente_de_sequencia_na_linha := falta.Correntes_de_sequencia_nas_linhas(zbus_positiva, zbus_zero, tensoes_sequencia, barra.Elementos_tipo_2_3(input.Tabela_excel(), curto_circuito), barras_sistema)
+    //fmt.Println(corrente_de_sequencia_na_linha)
+    //fmt.Println("\nAs correntes de fase nas linhas são:")
+    //corrente_de_fase_na_linha := falta.Corrente_na_linha(corrente_de_sequencia_na_linha)
+    //fmt.Println(corrente_de_fase_na_linha)
+
 
     fmt.Println("\nO tempo de execução foi de", time.Since(start))
 }

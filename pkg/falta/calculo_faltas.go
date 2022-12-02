@@ -9,9 +9,9 @@ import (
 
 
 type Componente_de_sequencia struct {
-	Sequencia_positiva	float64
-	Sequencia_negativa	float64
-	Sequencia_zero		float64
+	Sequencia_positiva	complex128
+	Sequencia_negativa	complex128
+	Sequencia_zero		complex128
 }
 
 
@@ -47,9 +47,9 @@ func Tensoes_de_fase(barras_sistema map[string]zbus.Posicao_zbus, tensoes_sequen
 
 	for barras := range barras_sistema {
 		tensoes_fase[barras] = Componente_de_fase{
-			A:	complex(tensoes_sequencia[barras].Sequencia_zero, 0) + complex(tensoes_sequencia[barras].Sequencia_positiva, 0) + complex(tensoes_sequencia[barras].Sequencia_negativa, 0),
-			B:	complex(tensoes_sequencia[barras].Sequencia_zero, 0) + a*a * complex(tensoes_sequencia[barras].Sequencia_positiva, 0) + a * complex(tensoes_sequencia[barras].Sequencia_negativa, 0),
-			C:	complex(tensoes_sequencia[barras].Sequencia_zero, 0) + a * complex(tensoes_sequencia[barras].Sequencia_positiva, 0) + a*a * complex(tensoes_sequencia[barras].Sequencia_negativa, 0),
+			A:	tensoes_sequencia[barras].Sequencia_zero + tensoes_sequencia[barras].Sequencia_positiva + tensoes_sequencia[barras].Sequencia_negativa,
+			B:	tensoes_sequencia[barras].Sequencia_zero + a*a * tensoes_sequencia[barras].Sequencia_positiva + a * tensoes_sequencia[barras].Sequencia_negativa,
+			C:	tensoes_sequencia[barras].Sequencia_zero + a * tensoes_sequencia[barras].Sequencia_positiva + a*a * tensoes_sequencia[barras].Sequencia_negativa,
 		}
 	}
 
@@ -82,9 +82,9 @@ func Corrente_na_linha(corrente_de_sequencia_na_linha map[string]Componente_de_s
 
 	for nome_linha, linha := range corrente_de_sequencia_na_linha {
 		corrente_de_fase_na_linha[nome_linha] = Componente_de_fase{
-			A:	complex(linha.Sequencia_zero, 0) + complex(linha.Sequencia_positiva, 0) + complex(linha.Sequencia_negativa, 0),
-			B:	complex(linha.Sequencia_zero, 0) + a*a * complex(linha.Sequencia_positiva, 0) + a * complex(linha.Sequencia_negativa, 0),
-			C:	complex(linha.Sequencia_zero, 0) + a * complex(linha.Sequencia_positiva, 0) + a*a * complex(linha.Sequencia_negativa, 0),
+			A:	linha.Sequencia_zero + linha.Sequencia_positiva + linha.Sequencia_negativa,
+			B:	linha.Sequencia_zero + a*a * linha.Sequencia_positiva + a * linha.Sequencia_negativa,
+			C:	linha.Sequencia_zero + a * linha.Sequencia_positiva + a*a * linha.Sequencia_negativa,
 		}
 	}
 

@@ -2,8 +2,6 @@ package zbus
 
 import (
 	"fmt"
-
-	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 )
 
@@ -13,7 +11,7 @@ type Posicao_zbus struct {
     Posicao   int
 }
 
-type Matrix = [][]float64
+type Matrix = [][]complex128
 
 
 func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 map[string]barra.Dados_de_linha, tamanho_do_sistema int) (Matrix, Matrix, map[string]Posicao_zbus) {
@@ -105,13 +103,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 map[string
     }
 
 
-    fmt.Println("\nA matriz Zbus do sistema é: ")
-    for x := 0; x < tamanho_do_sistema; x++ {
-        for y := 0; y < tamanho_do_sistema; y++ {
-            fmt.Printf("%v\t", geral.Round(zbus_positiva[x][y], 4))
-        }
-        fmt.Println("")
-    }
+
 
 
     return zbus_positiva, zbus_zero, barras_adicionadas
@@ -122,7 +114,7 @@ func Preenche_matriz_com_zeros(tamanho int) Matrix {
 
     // Adiciona elementos 0 na matriz zbus
     for i := 0; i < tamanho; i++ {
-        temp := make([]float64, 0)
+        temp := make([]complex128, 0)
         for j := 0; j < tamanho; j++ {
             temp = append(temp, 0)
         }
@@ -135,7 +127,7 @@ func Preenche_matriz_com_zeros(tamanho int) Matrix {
 
 func Aumenta_tamanho_da_matriz(matrix Matrix) Matrix {
 
-    temp := make([]float64, 0)
+    temp := make([]complex128, 0)
     for j := 0; j <= len(matrix); j++ {
         temp = append(temp, 0)
     }

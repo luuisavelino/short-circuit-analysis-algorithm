@@ -11,8 +11,8 @@ type Dados_de_linha struct {
     De	                string
     Para	            string
     Nome	            string
-    Impedancia_positiva float64
-    Impedancia_zero     float64
+    Impedancia_positiva complex128
+    Impedancia_zero     complex128
 }
 
 
@@ -40,7 +40,7 @@ func transformadores(tabela_excel *excelize.File) map[string]Dados_de_linha {
             Para:	                dados_transformadores[x][1],
             Nome:	                dados_transformadores[x][2],
             Impedancia_positiva:    geral.Impedancia(dados_transformadores[x][6], dados_transformadores[x][7], impedancia_atual),
-            Impedancia_zero:        0.0,
+            Impedancia_zero:        0,
         }
     }
 
@@ -66,7 +66,7 @@ func Elementos_tipo_1(tabela_excel *excelize.File) []Dados_de_linha {
         elementos_tipo_1 = append(elementos_tipo_1, Dados_de_linha{
             De:	                    dados_linhas[x][0],
             Nome:	                dados_linhas[x][1],
-            Impedancia_positiva:	geral.String_para_float(dados_linhas[x][3]) / 100,
+            Impedancia_positiva:	complex(0, geral.String_para_float(dados_linhas[x][3]) / 100),
             Impedancia_zero:        0,
         })
     }
@@ -137,8 +137,8 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File, curto_circuito input.Ponto_
             De:	                    curto_circuito.De,
             Para:	                "barra_curto_circuito",
             Nome:	                "Elemento tipo 2 do curto-circuito",
-            Impedancia_positiva:    elemento_barra.Impedancia_positiva * float64(curto_circuito.Ponto) / 100,
-            Impedancia_zero:        elemento_barra.Impedancia_zero * float64(curto_circuito.Ponto) / 100,
+            Impedancia_positiva:    elemento_barra.Impedancia_positiva * complex(float64(curto_circuito.Ponto), 0) / 100,
+            Impedancia_zero:        elemento_barra.Impedancia_zero * complex(float64(curto_circuito.Ponto), 0) / 100,
         }
 
         // Adciona o elemento tipo 3 (Linha entre a barra cc até Para)
@@ -146,8 +146,8 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File, curto_circuito input.Ponto_
             De:	                    "barra_curto_circuito",
             Para:	                curto_circuito.Para,
             Nome:	                "Elemento tipo 3 do curto-circuito",
-            Impedancia_positiva:    elemento_barra.Impedancia_positiva * float64(100 - curto_circuito.Ponto) / 100,
-            Impedancia_zero:        elemento_barra.Impedancia_zero * float64(100 - curto_circuito.Ponto) / 100,
+            Impedancia_positiva:    elemento_barra.Impedancia_positiva * complex(float64(100 - curto_circuito.Ponto), 0) / 100,
+            Impedancia_zero:        elemento_barra.Impedancia_zero * complex(float64(100 - curto_circuito.Ponto), 0) / 100,
         }
     }
 
