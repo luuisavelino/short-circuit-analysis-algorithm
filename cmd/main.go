@@ -1,8 +1,11 @@
 package main
 
 import (
+	"strconv"
+
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/input"
 
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/analise"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/falta"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
@@ -14,74 +17,131 @@ import (
 func main() {
     start := time.Now()
 
-    curto_circuito := input.Ponto_curto_circuito{
-        De:     "2",
-        Para:   "3",
-        Ponto:  0,
-    }
-
     var barra_curto_circuito string
     var tamanho_do_sistema int = 6
 
-    if curto_circuito.Ponto == 0 {
-        barra_curto_circuito = curto_circuito.De
-    } else if curto_circuito.Ponto == 100 {
-        barra_curto_circuito = curto_circuito.Para
-    } else {
-        barra_curto_circuito = "barra_curto_circuito"
-        tamanho_do_sistema++
-    }
+    var nome_do_arquivo string
+    var barra_de string
+    var barra_para string
+    var ponto_cc_string string
+    var ponto_cc int
+    var escolha string
 
-    elementos_tipo_1 := barra.Elementos_tipo_1(input.Tabela_excel())
-    elementos_tipo_2_3 := barra.Elementos_tipo_2_3(input.Tabela_excel(), curto_circuito)
-
-    // Constroi a matriz Zbus do sistema
-    zbus_positiva, zbus_zero, barras_sistema := zbus.Zbus(elementos_tipo_1, elementos_tipo_2_3, tamanho_do_sistema)
-    fmt.Println("=====================================================")
-
-    fmt.Println("\nA matriz Zbus positiva e negativa do sistema é: ")
-    for x := 0; x < tamanho_do_sistema; x++ {
-        for y := 0; y < tamanho_do_sistema; y++ {
-            fmt.Printf("    %v\t", zbus_positiva[x][y])
+    for {
+        fmt.Println("Escolha uma das opções:")
+        fmt.Println("1 - Definir o arquivo do sistema a ser analisado\n2 - Sair")
+        fmt.Scanln(&escolha)
+        if escolha == "2" {
+            break
         }
-        fmt.Println("")
-    }
 
-    fmt.Println("\nA matriz Zbus do sistema é: ")
-    for x := 0; x < tamanho_do_sistema; x++ {
-        for y := 0; y < tamanho_do_sistema; y++ {
-            fmt.Printf("\t%v\t", zbus_zero[x][y])
+        // Pegando o arquivo que contem os dados do sistema
+        fmt.Println("Digite o nome do arquivo")
+        fmt.Scanln(&nome_do_arquivo)
+        // nome_do_arquivo = "exemplo_de_aula_3"
+
+        tabela_dados := input.Tabela_excel("../data/"+ nome_do_arquivo +".xlsx")
+
+        for {
+            fmt.Println("Escolha o tipo de analise que deseja realizar:")
+            fmt.Println("1 - Realizar analise de curto-circuito\n2 - Realizar analise de tempo critico\n3 - Voltar")
+            fmt.Scanln(&escolha)
+            if escolha == "1" {
+                // Curto circuito do sistema
+                fmt.Println("Definindo onde que ocorrerá o curto-circuito")
+                fmt.Println("Barra De:")
+                fmt.Scanln(&barra_de)
+                fmt.Println("Barra Para:")
+                fmt.Scanln(&barra_para)
+                fmt.Println("Ponto do curto circuito (0 a 100):")
+                fmt.Scanln(&ponto_cc_string)
+                ponto_cc, _ = strconv.Atoi(ponto_cc_string)
+
+                curto_circuito := barra.Ponto_curto_circuito{
+                    De:     barra_de,
+                    Para:   barra_para,
+                    Ponto:  ponto_cc,
+                }
+
+                if curto_circuito.Ponto == 0 {
+                    barra_curto_circuito = curto_circuito.De
+                } else if curto_circuito.Ponto == 100 {
+                    barra_curto_circuito = curto_circuito.Para
+                } else {
+                    barra_curto_circuito = "barra_curto_circuito"
+                    tamanho_do_sistema++
+                }
+
+                inicio_calculo_zbus := time.Now()
+
+                elementos_tipo_1 := barra.Elementos_tipo_1(tabela_dados)
+                elementos_tipo_2_3 := barra.Elementos_tipo_2_3(tabela_dados, curto_circuito)
+            
+                // Constroi a matriz Zbus do sistema
+                zbus_positiva, zbus_zero, barras_sistema := zbus.Zbus(elementos_tipo_1, elementos_tipo_2_3, tamanho_do_sistema)
+            
+                analise.Mostra_matriz_zbus(zbus_positiva, tamanho_do_sistema)
+                analise.Mostra_matriz_zbus(zbus_zero, tamanho_do_sistema)
+
+                fmt.Println("\nO tempo de calculo da Zbus foi de", time.Since(inicio_calculo_zbus))
+
+                elementos_tipo_2_3 = barra.Elementos_tipo_2_3(tabela_dados, curto_circuito)
+
+                for {
+                    fmt.Println("Escolha o tipo curto-circuito a ser analisado:")
+                    fmt.Println("\nEscolha o tipo de falta:\n  (1) - Monofasica\n  (2) - Bifasica\n  (3) - Bifasica Terra\n  (4) - Trifasica\n  (5) - Voltar")
+                    fmt.Scanln(&escolha)
+
+                    inicio_calculo_falta := time.Now()
+                    if escolha == "1" {
+                        Icc_monofasica_fase, Icc_monofasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
+                        analise.Analise_curto_circuito(zbus_positiva, zbus_zero, elementos_tipo_2_3, barras_sistema, Icc_monofasica_fase, Icc_monofasica_sequencia, curto_circuito)
+            
+                    } else if escolha == "2" {
+                        Icc_bifasica_fase, Icc_bifasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
+                        analise.Analise_curto_circuito(zbus_positiva, zbus_zero, elementos_tipo_2_3, barras_sistema, Icc_bifasica_fase, Icc_bifasica_sequencia, curto_circuito)
+            
+                    } else if escolha == "3" {
+                        fmt.Println("Ainda não desenvolvido")
+            
+                    } else if escolha == "4" {
+                        falta.Falta_trifasica(zbus_positiva, barras_sistema, barra_curto_circuito, barra.Elementos_tipo_2_3(tabela_dados, curto_circuito))
+
+                    } else if escolha == "5" {
+                        break
+
+                    } else {
+                        fmt.Println("Tipo de falta não encontrada")
+                    }
+
+                    fmt.Println("\nO tempo de calculo da falta foi de", time.Since(inicio_calculo_falta))
+                }
+
+            } else if escolha == "2" {
+                fmt.Println("Realizando analise de tempo critico")
+
+            } else if escolha == "3" {
+                break
+
+            } else {
+                fmt.Println("Tipo de analise não encontrada")
+            }
         }
-        fmt.Println("")
     }
 
 
-    // Debug
 
-    //Falta trifásica
-    //falta.Falta_trifasica(zbus_positiva, barras_sistema, barra_curto_circuito, barra.Elementos_tipo_2_3(input.Tabela_excel(), curto_circuito))
-    //fmt.Println("=====================================================")
-
-
-    fase, Icc_bifasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
-
-    fmt.Println(fase)
-    fmt.Println(Icc_bifasica_sequencia)
-
-    //fmt.Println("\nAs tensões de sequencia são:")
-    //tensoes_sequencia := falta.Tensoes_de_sequencia(zbus_positiva, zbus_zero, barras_sistema, Icc_bifasica_sequencia)
-    //fmt.Println(tensoes_sequencia)
-    //fmt.Println(tensoes_sequencia)
-    //fmt.Println("\nAs tensões de fase são:")
-    //tensoes_fase := falta.Tensoes_de_fase(barras_sistema, tensoes_sequencia)
-    //fmt.Println(tensoes_fase)
-    //fmt.Println("\nAs correntes de sequencia nas linhas são:")
-    //corrente_de_sequencia_na_linha := falta.Correntes_de_sequencia_nas_linhas(zbus_positiva, zbus_zero, tensoes_sequencia, barra.Elementos_tipo_2_3(input.Tabela_excel(), curto_circuito), barras_sistema)
-    //fmt.Println(corrente_de_sequencia_na_linha)
-    //fmt.Println("\nAs correntes de fase nas linhas são:")
-    //corrente_de_fase_na_linha := falta.Corrente_na_linha(corrente_de_sequencia_na_linha)
-    //fmt.Println(corrente_de_fase_na_linha)
+    //Realizar analise
+    //1 faltas
+        //1 monofascia
+        //2 bifasica
+        //3 bifasica-terra
+        //4 trifasica
+        //5 voltar
+    //2 tempo-critico
+    //3 sair do programa
 
 
-    fmt.Println("\nO tempo de execução foi de", time.Since(start))
+
+    fmt.Println("\nO tempo de execução do programa foi de", time.Since(start))
 }

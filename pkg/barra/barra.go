@@ -2,9 +2,17 @@ package barra
 
 import (
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
-	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/input"
 	"github.com/xuri/excelize/v2"
 )
+
+
+type Ponto_curto_circuito struct {
+    De                      string
+    Para                    string
+    Ponto                   int
+    Impedancia_positiva     float64
+    Impedancia_zero         float64
+}
 
 
 type Dados_de_linha struct {
@@ -84,7 +92,7 @@ func Elementos_tipo_1(tabela_excel *excelize.File) []Dados_de_linha {
 // Obs:         Pegamos os dados dos transformadores e passamos para cá, pois são elementos do tipo 2
 //
 // Saida:       Retorna um map contendo os dados de todos os elementos tipo 1
-func Elementos_tipo_2_3(tabela_excel *excelize.File, curto_circuito input.Ponto_curto_circuito) map[string]Dados_de_linha {
+func Elementos_tipo_2_3(tabela_excel *excelize.File, curto_circuito Ponto_curto_circuito) map[string]Dados_de_linha {
     var elementos_tipo_2_3 = make(map[string]Dados_de_linha)
     var elemento_barra Dados_de_linha
 
