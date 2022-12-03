@@ -59,13 +59,18 @@ func main() {
     // Debug
 
     //Falta trifásica
-    falta.Falta_trifasica(zbus_positiva, barras_sistema, barra_curto_circuito, barra.Elementos_tipo_2_3(input.Tabela_excel(), curto_circuito))
-    fmt.Println("=====================================================")
+    //falta.Falta_trifasica(zbus_positiva, barras_sistema, barra_curto_circuito, barra.Elementos_tipo_2_3(input.Tabela_excel(), curto_circuito))
+    //fmt.Println("=====================================================")
 
 
-    //_, Icc_bifasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
+    fase, Icc_bifasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
+
+    fmt.Println(fase)
+    fmt.Println(Icc_bifasica_sequencia)
+
     //fmt.Println("\nAs tensões de sequencia são:")
     //tensoes_sequencia := falta.Tensoes_de_sequencia(zbus_positiva, zbus_zero, barras_sistema, Icc_bifasica_sequencia)
+    //fmt.Println(tensoes_sequencia)
     //fmt.Println(tensoes_sequencia)
     //fmt.Println("\nAs tensões de fase são:")
     //tensoes_fase := falta.Tensoes_de_fase(barras_sistema, tensoes_sequencia)

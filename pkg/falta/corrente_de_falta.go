@@ -2,7 +2,6 @@ package falta
 
 import (
 	"fmt"
-	"math"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
 )
@@ -41,23 +40,18 @@ func Corrente_falta_monofasica(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix,
 
 
 func Corrente_falta_bifasica(zbus_positiva zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, barra_curto_circuito string) (Componente_de_fase, Componente_de_sequencia) {
-	var Icc_f complex128
 	var Vf complex128 = 1.0 //pu
 
 	posicao_na_zbus := barras_sistema[barra_curto_circuito].Posicao
 	Icc_a_positivo := Vf / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_positiva[posicao_na_zbus][posicao_na_zbus])
-
-	Icc_fase := Componente_de_fase{
-		A:	0,
-		B:	complex(-math.Sqrt(3), 0) * Icc_f,
-		C:	complex(math.Sqrt(3), 0) * Icc_f,
-	}
 
 	Icc_sequencia := Componente_de_sequencia{
 		Sequencia_positiva:	Icc_a_positivo,
 		Sequencia_negativa:	-Icc_a_positivo,
 		Sequencia_zero:		0,
 	}
+
+	Icc_fase := Sequencia_para_fase(Icc_sequencia)
 
 	return Icc_fase, Icc_sequencia
 }

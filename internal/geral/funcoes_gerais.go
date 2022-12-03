@@ -2,9 +2,9 @@ package geral
 
 import (
 	"log"
-    //"math"
 	"strconv"
 )
+
 
 // Entrada:     Resistencia, Reatancia, e a impedância atual
 // Processo:    Realiza o calculo da impedância

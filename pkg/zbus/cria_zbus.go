@@ -102,10 +102,6 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 map[string
             tamanho_do_sistema)
     }
 
-
-
-
-
     return zbus_positiva, zbus_zero, barras_adicionadas
 }
 

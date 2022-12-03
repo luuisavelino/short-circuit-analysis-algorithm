@@ -1,8 +1,6 @@
 package falta
 
 import (
-	"math"
-
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
 )
@@ -22,10 +20,7 @@ type Componente_de_fase struct {
 }
 
 
-var a = complex(-(1.0/2.0), math.Sqrt(3.0/2.0))
-
-
-func Tensoes_de_sequencia(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, corrente Componente_de_sequencia) (map[string]Componente_de_sequencia) {
+func Tensoes_de_sequencia_nas_barras(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, corrente Componente_de_sequencia) (map[string]Componente_de_sequencia) {
 
 	var tensoes_sequencia = make(map[string]Componente_de_sequencia)
 
@@ -41,22 +36,6 @@ func Tensoes_de_sequencia(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, barr
 }
 
 
-func Tensoes_de_fase(barras_sistema map[string]zbus.Posicao_zbus, tensoes_sequencia map[string]Componente_de_sequencia) (map[string]Componente_de_fase) {
-
-	var tensoes_fase = make(map[string]Componente_de_fase)
-
-	for barras := range barras_sistema {
-		tensoes_fase[barras] = Componente_de_fase{
-			A:	tensoes_sequencia[barras].Sequencia_zero + tensoes_sequencia[barras].Sequencia_positiva + tensoes_sequencia[barras].Sequencia_negativa,
-			B:	tensoes_sequencia[barras].Sequencia_zero + a*a * tensoes_sequencia[barras].Sequencia_positiva + a * tensoes_sequencia[barras].Sequencia_negativa,
-			C:	tensoes_sequencia[barras].Sequencia_zero + a * tensoes_sequencia[barras].Sequencia_positiva + a*a * tensoes_sequencia[barras].Sequencia_negativa,
-		}
-	}
-
-	return tensoes_fase
-}
-
-
 func Correntes_de_sequencia_nas_linhas(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, tensoes_sequencia map[string]Componente_de_sequencia, elementos_tipo_2_3 map[string]barra.Dados_de_linha, barras_sistema map[string]zbus.Posicao_zbus) (map[string]Componente_de_sequencia) {
 
 	var corrente_de_sequencia_na_linha = make(map[string]Componente_de_sequencia)
@@ -68,25 +47,9 @@ func Correntes_de_sequencia_nas_linhas(zbus_positiva zbus.Matrix, zbus_zero zbus
 		corrente_de_sequencia_na_linha[nome_linha] = Componente_de_sequencia{
 			Sequencia_positiva: (tensoes_sequencia[linha.De].Sequencia_positiva - tensoes_sequencia[linha.Para].Sequencia_positiva) / zbus_positiva[posicao_de][posicao_para],
 			Sequencia_negativa: (tensoes_sequencia[linha.De].Sequencia_negativa - tensoes_sequencia[linha.Para].Sequencia_negativa) / zbus_positiva[posicao_de][posicao_para],
-			Sequencia_zero: 	(tensoes_sequencia[linha.De].Sequencia_zero - tensoes_sequencia[linha.Para].Sequencia_zero) / zbus_zero[posicao_de][posicao_para],
+			Sequencia_zero: 	(tensoes_sequencia[linha.De].Sequencia_zero 	- tensoes_sequencia[linha.Para].Sequencia_zero) 	/ zbus_zero[posicao_de][posicao_para],
 		}
     }
 
 	return corrente_de_sequencia_na_linha
-}
-
-
-func Corrente_na_linha(corrente_de_sequencia_na_linha map[string]Componente_de_sequencia) (map[string]Componente_de_fase) {
-
-	var corrente_de_fase_na_linha = make(map[string]Componente_de_fase)
-
-	for nome_linha, linha := range corrente_de_sequencia_na_linha {
-		corrente_de_fase_na_linha[nome_linha] = Componente_de_fase{
-			A:	linha.Sequencia_zero + linha.Sequencia_positiva + linha.Sequencia_negativa,
-			B:	linha.Sequencia_zero + a*a * linha.Sequencia_positiva + a * linha.Sequencia_negativa,
-			C:	linha.Sequencia_zero + a * linha.Sequencia_positiva + a*a * linha.Sequencia_negativa,
-		}
-	}
-
-	return corrente_de_fase_na_linha
 }
