@@ -1,9 +1,13 @@
 package geral
 
 import (
+	"fmt"
 	"log"
 	"math"
+	"math/cmplx"
 	"strconv"
+
+	"github.com/xuri/excelize/v2"
 )
 
 // Entrada:     Resistencia, Reatancia, e a impedância atual
@@ -55,4 +59,20 @@ func Round_cmplx(valor complex128, casas float64) complex128 {
     valor_imag := Round(imag(valor), casas)
 
     return complex(valor_real, valor_imag)
+}
+
+
+func Retangular_To_Polar(valor complex128) string {
+    modulo, angulo := cmplx.Polar(valor)
+
+    modulo = Round(modulo, 4)
+    angulo = Round(angulo * 180 / math.Pi, 4)
+
+    return fmt.Sprintf("%f ∠%f", modulo, angulo)
+}
+
+
+func Quantidade_de_barras(tabela_excel *excelize.File) int {
+    barras, _ := tabela_excel.GetRows(tabela_excel.GetSheetList()[0])
+    return len(barras) - 2
 }

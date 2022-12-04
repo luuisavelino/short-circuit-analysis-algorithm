@@ -20,7 +20,6 @@ func main() {
     start := time.Now()
 
     var barra_curto_circuito string
-    var tamanho_do_sistema int = 33
 
     var nome_do_arquivo string
     var barra_de string
@@ -50,6 +49,8 @@ func main() {
             fmt.Println("Arquivo não encontrado, tente novamente")
             continue
         }
+
+        var tamanho_do_sistema int = geral.Quantidade_de_barras(tabela_dados)
 
         for {
             fmt.Println("Escolha o tipo de analise que deseja realizar:")
