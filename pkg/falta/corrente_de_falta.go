@@ -2,6 +2,8 @@ package falta
 
 import (
 	"fmt"
+	"math"
+
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
 )
@@ -19,7 +21,7 @@ func Corrente_falta_monofasica(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix,
 	Icc_a := (3 * Vf) / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_zero[posicao_na_zbus][posicao_na_zbus])
 
 	// Circuito aberto, não há corrente de falta monofasica
-	if zbus_zero[posicao_na_zbus][posicao_na_zbus] == 0 {
+	if imag(Icc_a) < math.Pow(10, -6) {
 		Icc_a = 0
 	}
 

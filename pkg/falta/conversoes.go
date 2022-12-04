@@ -1,12 +1,12 @@
 package falta
 
-
 import (
 	"math"
+	"math/cmplx"
 )
 
 
-var a = complex(-(1.0/2.0), math.Sqrt(3.0/2.0))
+var a complex128 = cmplx.Rect(1, 120 * math.Pi / 180)
 
 
 func Sequencia_para_fase(componente Componente_de_sequencia) (Componente_de_fase) {
