@@ -102,7 +102,7 @@ func main() {
 
                     inicio_calculo_falta := time.Now()
                     if escolha == "1" {
-                        Icc_monofasica_fase, Icc_monofasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
+                        Icc_monofasica_fase, Icc_monofasica_sequencia := falta.Corrente_falta_monofasica(zbus_positiva, zbus_zero, barras_sistema, barra_curto_circuito)
                         analise.Analise_curto_circuito(zbus_positiva, zbus_zero, elementos_tipo_2_3, barras_sistema, Icc_monofasica_fase, Icc_monofasica_sequencia, curto_circuito)
 
                     } else if escolha == "2" {

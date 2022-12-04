@@ -14,8 +14,6 @@ const (
 
 func Corrente_falta_monofasica(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, barras_sistema map[string]zbus.Posicao_zbus, barra_curto_circuito string) (Componente_de_fase, Componente_de_sequencia) {
 
-	Vf := 1.0 + 0i //pu
-
 	posicao_na_zbus := barras_sistema[barra_curto_circuito].Posicao
 
 	Icc_a := (3 * Vf) / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_zero[posicao_na_zbus][posicao_na_zbus])
@@ -36,10 +34,6 @@ func Corrente_falta_monofasica(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix,
 		Sequencia_negativa:	Icc_a / 3,
 		Sequencia_zero:		Icc_a / 3,
 	}
-
-	fmt.Println("As correntes de falta monofasica são:")
-	fmt.Println(Icc_fase)
-	fmt.Println(Icc_sequencia)
 
 	return Icc_fase, Icc_sequencia
 }

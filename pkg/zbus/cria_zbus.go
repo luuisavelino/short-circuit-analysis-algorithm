@@ -30,7 +30,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 map[string
         zbus_zero = Adiciona_elemento_tipo_1_na_zbus(zbus_zero, posicao, dados_linha.Impedancia_zero)
 
 
-        fmt.Println("Adicionado elemento tipo 1 -> Barra: " + dados_linha.De + "\t\tImpedancia:", dados_linha.Impedancia_positiva)
+        fmt.Println("Adicionado elemento tipo 1 -> Barra: " + dados_linha.De + "\t\tImpedancia:", dados_linha.Impedancia_zero)
 
         barras_adicionadas[dados_linha.De] = Posicao_zbus{
             Posicao:    posicao,
@@ -56,7 +56,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 map[string
                 zbus_positiva = Adiciona_elemento_tipo_2_na_zbus(zbus_positiva, barras_adicionadas[linha.De].Posicao, posicao, linha.Impedancia_positiva)
                 zbus_zero = Adiciona_elemento_tipo_2_na_zbus(zbus_zero, barras_adicionadas[linha.De].Posicao, posicao, linha.Impedancia_zero)
 
-                fmt.Println("Adicionado elemento tipo 2 -> Linha: " + linha.De + "-" + linha.Para + "\tImpedancia:", linha.Impedancia_positiva)
+                fmt.Println("Adicionado elemento tipo 2 -> Linha: " + linha.De + "-" + linha.Para + "\tImpedancia:", linha.Impedancia_zero)
 
                 barras_adicionadas[linha.Para] = Posicao_zbus{
                     Posicao:    posicao,
@@ -69,7 +69,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 map[string
                 zbus_positiva = Adiciona_elemento_tipo_2_na_zbus(zbus_positiva, barras_adicionadas[linha.Para].Posicao, posicao, linha.Impedancia_positiva)
                 zbus_zero = Adiciona_elemento_tipo_2_na_zbus(zbus_zero, barras_adicionadas[linha.Para].Posicao, posicao, linha.Impedancia_zero)
 
-                fmt.Println("Adicionado elemento tipo 2 -> Linha: " + linha.De + "-" + linha.Para + "\tImpedancia:", linha.Impedancia_positiva)
+                fmt.Println("Adicionado elemento tipo 2 -> Linha: " + linha.De + "-" + linha.Para + "\tImpedancia:", linha.Impedancia_zero)
 
                 barras_adicionadas[linha.De] = Posicao_zbus{
                     Posicao:    posicao,
@@ -86,7 +86,7 @@ func Zbus(elementos_tipo_1 []barra.Dados_de_linha, elementos_tipo_2_3 map[string
     for x := 0; x < len(elementos_tipo_3); x++ {
         linha := elementos_tipo_3[x]
 
-        fmt.Println("Adicionado elemento tipo 3 -> Linha: " + linha.De + "-" + linha.Para + " \tImpedancia:", linha.Impedancia_positiva, " \tRealizando redução de Kron")
+        fmt.Println("Adicionado elemento tipo 3 -> Linha: " + linha.De + "-" + linha.Para + " \tImpedancia:", linha.Impedancia_zero, " \tRealizando redução de Kron")
 
         zbus_positiva = Adiciona_elemento_tipo_3_com_reducao_de_kron(
             zbus_positiva, 
