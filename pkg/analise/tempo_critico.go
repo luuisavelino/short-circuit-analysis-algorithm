@@ -14,40 +14,47 @@ const (
 )
 
 
+type Dados_geracao struct {
+	Modulo_corrente_de_saida_gerador	float64
+	Angulo_corrente_de_saida_gerador	float64
+	Modulo_tensao_de_saida_gerador		float64
+	Angulo_tensao_de_saida_gerador		float64
+	Angulo_tensao_barra_curto			float64
+	Potencia_media_pre_barra_gerador	float64
+	Potencia_media_pre_barra_curto		float64
+	Potencia_media_pos_barra_curto		float64
+	Angulo_delta_maximo					float64
+	Angulo_delta_critico				float64
+	Tempo_maximo						float64
+}
 
 
+func Tempo_critico(X_1_2_pre_falta, X_1_2_pos_falta, Xd_gerador complex128) (Dados_geracao) {
 
-func Tempo_critico(X_1_2_pre_falta, X_1_2_pos_falta, Xd_gerador complex128) (float64, float64) {
+	var geracao Dados_geracao
 
 	var Ws float64 = 2 * math.Pi * frequencia_da_rede
-	//var X_equivalente_pre_falta float64 = cmplx.Abs(X_1_2_pre_falta + Xd_gerador)
+	var X_equivalente_pre_falta float64 = cmplx.Abs(X_1_2_pre_falta + Xd_gerador)
 	var X_equivalente_pos_falta float64 = cmplx.Abs(X_1_2_pos_falta + Xd_gerador)
 
-	angulo_tensao_barra_gerador := math.Asin((potencia_media * cmplx.Abs(X_1_2_pre_falta))/(V1 * V2))
+	geracao.Angulo_tensao_barra_curto = math.Asin((potencia_media * cmplx.Abs(X_1_2_pre_falta))/(V1 * V2))
 
-	corrente_saida_gerador := ((cmplx.Rect(V1, angulo_tensao_barra_gerador) - complex(V2, 0)) / X_1_2_pre_falta)
+	corrente_saida_gerador := ((cmplx.Rect(V1, geracao.Angulo_tensao_barra_curto) - complex(V2, 0)) / X_1_2_pre_falta)
 	
-	modulo_tensao_gerador, angulo_tensao_gerador := cmplx.Polar(cmplx.Rect(V1, angulo_tensao_barra_gerador) + Xd_gerador * corrente_saida_gerador)
-	//fmt.Println("O angulo da tensão do gerador é de", angulo_tensao_barra_gerador * 180 / math.Pi, "(°)")
-	
-	//potencia_media_pre_falta_barra_1 := modulo_tensao_gerador * V1 / cmplx.Abs(Xd_gerador)
-	//potencia_media_pre_falta_barra_2 := modulo_tensao_gerador * V2 / X_equivalente_pre_falta
+	geracao.Modulo_corrente_de_saida_gerador, geracao.Angulo_corrente_de_saida_gerador = cmplx.Polar(corrente_saida_gerador)
 
-	//fmt.Println("A potencia de pré-falta na barra 1 é", potencia_media_pre_falta_barra_1,"sin(delta)")
-	//fmt.Println("A potencia de pré-falta na barra 2 é", potencia_media_pre_falta_barra_2,"sin(delta)")
+	geracao.Modulo_tensao_de_saida_gerador, geracao.Angulo_tensao_de_saida_gerador = cmplx.Polar(cmplx.Rect(V1, geracao.Angulo_tensao_barra_curto) + Xd_gerador * corrente_saida_gerador)
 
-	potencia_media_pos_falta_barra_2 := modulo_tensao_gerador * V2 / X_equivalente_pos_falta
-	//fmt.Println("A potencia de pós-falta na barra 2 é", potencia_media_pos_falta_barra_2,"sin(delta)")
+	geracao.Potencia_media_pre_barra_gerador = geracao.Modulo_tensao_de_saida_gerador * V1 / cmplx.Abs(Xd_gerador)
+	geracao.Potencia_media_pre_barra_curto = geracao.Modulo_tensao_de_saida_gerador * V2 / X_equivalente_pre_falta
 
+	geracao.Potencia_media_pos_barra_curto = geracao.Modulo_tensao_de_saida_gerador * V2 / X_equivalente_pos_falta
 
-	detla_max := math.Pi - math.Asin(potencia_media / potencia_media_pos_falta_barra_2)
-	//fmt.Println("O Angulo delta zero é de", angulo_tensao_gerador * 180 / math.Pi,"(°)")
-	//fmt.Println("O Angulo delta máximo é de", detla_max * 180 / math.Pi,"(°)")
+	geracao.Angulo_delta_maximo = math.Pi - math.Asin(potencia_media / geracao.Potencia_media_pos_barra_curto)
 
-	delta_c := math.Acos((potencia_media * (detla_max - angulo_tensao_gerador) + potencia_media_pos_falta_barra_2 * math.Cos(detla_max)) / potencia_media_pos_falta_barra_2)
+	geracao.Angulo_delta_critico = math.Acos((potencia_media * (geracao.Angulo_delta_maximo - geracao.Angulo_tensao_de_saida_gerador) + geracao.Potencia_media_pos_barra_curto * math.Cos(geracao.Angulo_delta_maximo)) / geracao.Potencia_media_pos_barra_curto)
 
-	tempo := math.Sqrt((4 * H * (delta_c - angulo_tensao_gerador)) / (Ws * potencia_media))
+	geracao.Tempo_maximo = math.Sqrt((4 * H * (geracao.Angulo_delta_critico - geracao.Angulo_tensao_de_saida_gerador)) / (Ws * potencia_media))
 
-
-	return delta_c, tempo
+	return geracao
 }

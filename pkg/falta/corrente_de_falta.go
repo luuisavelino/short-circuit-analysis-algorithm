@@ -64,11 +64,12 @@ func Corrente_falta_bifasico_terra(zbus_positiva zbus.Matrix, zbus_zero zbus.Mat
 
 	// Zeq = Z+  +  (Z- * Z0)/(Z- + Z0)
 	impedancia_equivalente := zbus_positiva[posicao_na_zbus][posicao_na_zbus] + ((zbus_zero[posicao_na_zbus][posicao_na_zbus] * zbus_positiva[posicao_na_zbus][posicao_na_zbus]) / (zbus_zero[posicao_na_zbus][posicao_na_zbus] + zbus_positiva[posicao_na_zbus][posicao_na_zbus]))
+	Icc := Vf / impedancia_equivalente
 
 	Icc_sequencia := Componente_de_sequencia{
-		Sequencia_positiva:	Vf / impedancia_equivalente,
-		Sequencia_negativa:	(Vf * zbus_zero[posicao_na_zbus][posicao_na_zbus]) / impedancia_equivalente,		// Divisor de corrente
-		Sequencia_zero:		(Vf * zbus_positiva[posicao_na_zbus][posicao_na_zbus]) / impedancia_equivalente,	// Divisor de corrente
+		Sequencia_positiva:	Icc,
+		Sequencia_negativa:	Icc * (zbus_zero[posicao_na_zbus][posicao_na_zbus]) / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_zero[posicao_na_zbus][posicao_na_zbus]),			// Divisor de corrente
+		Sequencia_zero:		Icc * (zbus_positiva[posicao_na_zbus][posicao_na_zbus]) / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_zero[posicao_na_zbus][posicao_na_zbus]),		// Divisor de corrente	
 	}
 
 	Icc_fase := Sequencia_para_fase(Icc_sequencia)

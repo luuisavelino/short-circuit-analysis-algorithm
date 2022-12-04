@@ -1,7 +1,6 @@
 package falta
 
 import (
-	"fmt"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
 )
@@ -31,7 +30,6 @@ func Tensoes_de_sequencia_nas_barras(zbus_positiva zbus.Matrix, zbus_zero zbus.M
 			Sequencia_negativa:	0 - zbus_positiva[posicao.Posicao][posicao.Posicao] * corrente.Sequencia_negativa,
 			Sequencia_zero:		0 - zbus_zero[posicao.Posicao][posicao.Posicao] 	* corrente.Sequencia_zero,
 		}
-		fmt.Println(tensoes_sequencia[barras].Sequencia_zero, zbus_zero[posicao.Posicao][posicao.Posicao], corrente.Sequencia_zero)
 	}
 
 

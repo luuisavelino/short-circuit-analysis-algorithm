@@ -133,12 +133,12 @@ func main() {
                             posicao_barra_gerador_pos := barras_sistema_pos[gerador.De].Posicao
                             posicao_barra_cc_pos := barras_sistema_pos[barra_curto_circuito].Posicao 
 
-                            delta_critico, tempo := analise.Tempo_critico(
+                            geracao := analise.Tempo_critico(
                                 zbus_positiva[posicao_barra_gerador_pre][posicao_barra_cc_pre], 
                                 zbus_pos_retirada_da_linha[posicao_barra_gerador_pos][posicao_barra_cc_pos], 
                                 gerador.Impedancia_positiva)
 
-                            fmt.Println(gerador.De, "\t\t", geral.Round(delta_critico * 180 / math.Pi, 4), "\t\t\t", geral.Round(tempo, 4))
+                            fmt.Println(gerador.De, "\t\t", geral.Round(geracao.Angulo_delta_critico * 180 / math.Pi, 4), "\t\t\t", geral.Round(geracao.Tempo_maximo, 4))
 
                         }
                     } else if escolha == "6" {
