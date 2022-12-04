@@ -54,7 +54,7 @@ func main() {
 
         for {
             fmt.Println("Escolha o tipo de analise que deseja realizar:")
-            fmt.Println("1 - Realizar analise de curto-circuito\n3 - Voltar")
+            fmt.Println("1 - Realizar analise de curto-circuito\n2 - Voltar")
             fmt.Scanln(&escolha)
             if escolha == "1" {
                 // Curto circuito do sistema
