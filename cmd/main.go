@@ -20,7 +20,7 @@ func main() {
     start := time.Now()
 
     var barra_curto_circuito string
-    var tamanho_do_sistema int = 6
+    var tamanho_do_sistema int = 33
 
     var nome_do_arquivo string
     var barra_de string
