@@ -2,9 +2,9 @@ package geral
 
 import (
 	"log"
+	"math"
 	"strconv"
 )
-
 
 // Entrada:     Resistencia, Reatancia, e a impedância atual
 // Processo:    Realiza o calculo da impedância
@@ -42,9 +42,17 @@ func Valida_erro(err error) {
 
 
 // Arredondamento para uma determinada quantidade de casas decimais
-func Round(valor complex128, casas float64) {
+func Round(valor float64, casas float64) float64 {
+    ratio := math.Pow(10, float64(casas))
+	return math.Round(valor * ratio) / ratio
+}
 
-    //var convesao complex128 = complex(math.Pow(10, casas), 0)
 
-	//return math.Round( (valor * convesao) / convesao)
+// Arredonda numeros complexos
+func Round_cmplx(valor complex128, casas float64) complex128 {
+
+    valor_real := Round(real(valor), casas)
+    valor_imag := Round(imag(valor), casas)
+
+    return complex(valor_real, valor_imag)
 }

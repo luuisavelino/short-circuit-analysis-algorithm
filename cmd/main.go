@@ -6,6 +6,7 @@ import (
 
 	"github.com/xuri/excelize/v2"
 
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/analise"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/falta"
@@ -97,26 +98,27 @@ func main() {
 
                 for {
                     fmt.Println("Escolha o tipo curto-circuito a ser analisado:")
-                    fmt.Println("\nEscolha o tipo de falta:\n  (1) - Monofasica\n  (2) - Bifasica\n  (3) - Bifasica Terra\n  (4) - Trifasica\n  (5) - Tempo crítico\n  (6) - Voltar")
+                    fmt.Println("\nEscolha o tipo de falta:\n  (1) - Monofasica\n  (2) - Bifasica\n  (3) - Bifasico Terra\n  (4) - Trifasica\n  (5) - Tempo crítico\n  (6) - Voltar")
                     fmt.Scanln(&escolha)
 
                     inicio_calculo_falta := time.Now()
                     if escolha == "1" {
-                        Icc_monofasica_fase, Icc_monofasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
+                        Icc_monofasica_fase, Icc_monofasica_sequencia := falta.Corrente_falta_monofasica(zbus_positiva, zbus_zero, barras_sistema, barra_curto_circuito)
                         analise.Analise_curto_circuito(zbus_positiva, zbus_zero, elementos_tipo_2_3, barras_sistema, Icc_monofasica_fase, Icc_monofasica_sequencia, curto_circuito)
-            
+
                     } else if escolha == "2" {
                         Icc_bifasica_fase, Icc_bifasica_sequencia := falta.Corrente_falta_bifasica(zbus_positiva, barras_sistema, barra_curto_circuito)
                         analise.Analise_curto_circuito(zbus_positiva, zbus_zero, elementos_tipo_2_3, barras_sistema, Icc_bifasica_fase, Icc_bifasica_sequencia, curto_circuito)
-            
+
                     } else if escolha == "3" {
-                        fmt.Println("Ainda não desenvolvido")
-            
+                        Icc_bifasica_fase, Icc_bifasica_sequencia := falta.Corrente_falta_bifasico_terra(zbus_positiva, zbus_zero, barras_sistema, barra_curto_circuito)
+                        analise.Analise_curto_circuito(zbus_positiva, zbus_zero, elementos_tipo_2_3, barras_sistema, Icc_bifasica_fase, Icc_bifasica_sequencia, curto_circuito)
+
                     } else if escolha == "4" {
                         falta.Falta_trifasica(zbus_positiva, barras_sistema, barra_curto_circuito, barra.Elementos_tipo_2_3(tabela_dados, curto_circuito))
 
                     } else if escolha == "5" {
-                        
+
                         curto_circuito.Ponto = 999
                         elementos_tipo_2_3 := barra.Elementos_tipo_2_3(tabela_dados, curto_circuito)
 
@@ -136,7 +138,7 @@ func main() {
                                 zbus_pos_retirada_da_linha[posicao_barra_gerador_pos][posicao_barra_cc_pos], 
                                 gerador.Impedancia_positiva)
 
-                            fmt.Println(gerador.De, "\t\t", delta_critico * 180 / math.Pi, "\t\t", tempo)
+                            fmt.Println(gerador.De, "\t\t", geral.Round(delta_critico * 180 / math.Pi, 4), "\t\t\t", geral.Round(tempo, 4))
 
                         }
                     } else if escolha == "6" {

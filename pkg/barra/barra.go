@@ -41,14 +41,15 @@ func transformadores(tabela_excel *excelize.File) map[string]Dados_de_linha {
     for x := 0; x < len(dados_transformadores); x ++ {
 
         transformador := dados_transformadores[x][0] + "-" +dados_transformadores[x][1]
-        impedancia_atual := elementos_transformadores[transformador].Impedancia_positiva
+        impedancia_atual_p := elementos_transformadores[transformador].Impedancia_positiva
+        impedancia_atual_z := elementos_transformadores[transformador].Impedancia_positiva
 
         elementos_transformadores[transformador] = Dados_de_linha{
             De:	                    dados_transformadores[x][0],
             Para:	                dados_transformadores[x][1],
             Nome:	                dados_transformadores[x][2],
-            Impedancia_positiva:    geral.Impedancia(dados_transformadores[x][3], dados_transformadores[x][4], impedancia_atual),
-            Impedancia_zero:        0,
+            Impedancia_positiva:    geral.Impedancia(dados_transformadores[x][3], dados_transformadores[x][4], impedancia_atual_p),
+            Impedancia_zero:        geral.Impedancia("0", dados_transformadores[x][5], impedancia_atual_z) + 3 * geral.Impedancia("0", dados_transformadores[x][6], impedancia_atual_z),
         }
     }
 
@@ -75,7 +76,7 @@ func Elementos_tipo_1(tabela_excel *excelize.File) []Dados_de_linha {
             De:	                    dados_linhas[x][0],
             Nome:	                dados_linhas[x][1],
             Impedancia_positiva:	complex(0, geral.String_para_float(dados_linhas[x][2]) / 100),
-            Impedancia_zero:        0,
+            Impedancia_zero:        complex(0, geral.String_para_float(dados_linhas[x][3]) + 3 * geral.String_para_float(dados_linhas[x][4])),
         })
     }
 
