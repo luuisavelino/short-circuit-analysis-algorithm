@@ -1,6 +1,7 @@
 package main
 
 import (
+    "os"
 	"math"
 	"strconv"
 
@@ -19,14 +20,11 @@ import (
 func main() {
     start := time.Now()
 
-    var barra_curto_circuito string
-
-    var nome_do_arquivo string
-    var barra_de string
-    var barra_para string
-    var ponto_cc_string string
+    var ponto_cc_string, barra_curto_circuito, nome_do_arquivo, barra_de, barra_para string
     var ponto_cc int
     var escolha string
+    var arquivos []string
+
 
     for {
         fmt.Println("Escolha uma das opções:")
@@ -40,11 +38,18 @@ func main() {
         }
 
         // Pegando o arquivo que contem os dados do sistema
-        fmt.Println("Digite o nome do arquivo")
-        fmt.Scanln(&nome_do_arquivo)
+        fmt.Println("Escolha o arquivo a ser analisado:")
+        files, _ := os.ReadDir("../data/")
+        for pos, file := range files {
+            fmt.Printf("(%v) - %v\n", pos, file.Name())
+            arquivos = append(arquivos, file.Name())
+        }
 
+        fmt.Scanln(&escolha)
+        numero_escolhido, _ := strconv.Atoi(escolha)
+        nome_do_arquivo = arquivos[numero_escolhido]
 
-        tabela_dados, err := excelize.OpenFile("../data/"+ nome_do_arquivo +".xlsx")
+        tabela_dados, err := excelize.OpenFile("../data/"+ nome_do_arquivo)
         if err != nil {
             fmt.Println("Arquivo não encontrado, tente novamente")
             continue
