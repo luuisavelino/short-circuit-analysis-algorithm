@@ -2,8 +2,7 @@ package main
 
 import (
 	"strconv"
-
-	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/input"
+	"github.com/xuri/excelize/v2"
 
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/analise"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
@@ -33,18 +32,25 @@ func main() {
         fmt.Scanln(&escolha)
         if escolha == "2" {
             break
+        } else if escolha != "1" {
+            fmt.Println("Opção inválida")
+            continue
         }
 
         // Pegando o arquivo que contem os dados do sistema
         fmt.Println("Digite o nome do arquivo")
         fmt.Scanln(&nome_do_arquivo)
-        // nome_do_arquivo = "exemplo_de_aula_3"
 
-        tabela_dados := input.Tabela_excel("../data/"+ nome_do_arquivo +".xlsx")
+
+        tabela_dados, err := excelize.OpenFile("../data/"+ nome_do_arquivo +".xlsx")
+        if err != nil {
+            fmt.Println("Arquivo não encontrado, tente novamente")
+            continue
+        }
 
         for {
             fmt.Println("Escolha o tipo de analise que deseja realizar:")
-            fmt.Println("1 - Realizar analise de curto-circuito\n2 - Realizar analise de tempo critico\n3 - Voltar")
+            fmt.Println("1 - Realizar analise de curto-circuito\n3 - Voltar")
             fmt.Scanln(&escolha)
             if escolha == "1" {
                 // Curto circuito do sistema
@@ -89,7 +95,7 @@ func main() {
 
                 for {
                     fmt.Println("Escolha o tipo curto-circuito a ser analisado:")
-                    fmt.Println("\nEscolha o tipo de falta:\n  (1) - Monofasica\n  (2) - Bifasica\n  (3) - Bifasica Terra\n  (4) - Trifasica\n  (5) - Voltar")
+                    fmt.Println("\nEscolha o tipo de falta:\n  (1) - Monofasica\n  (2) - Bifasica\n  (3) - Bifasica Terra\n  (4) - Trifasica\n\n  (5) - Tempo crítico\n  (6) - Voltar")
                     fmt.Scanln(&escolha)
 
                     inicio_calculo_falta := time.Now()
@@ -108,6 +114,9 @@ func main() {
                         falta.Falta_trifasica(zbus_positiva, barras_sistema, barra_curto_circuito, barra.Elementos_tipo_2_3(tabela_dados, curto_circuito))
 
                     } else if escolha == "5" {
+                        fmt.Println("Realizando analise de tempo critico")
+            
+                    } else if escolha == "6" {
                         break
 
                     } else {
@@ -116,11 +125,7 @@ func main() {
 
                     fmt.Println("\nO tempo de calculo da falta foi de", time.Since(inicio_calculo_falta))
                 }
-
             } else if escolha == "2" {
-                fmt.Println("Realizando analise de tempo critico")
-
-            } else if escolha == "3" {
                 break
 
             } else {
@@ -128,20 +133,6 @@ func main() {
             }
         }
     }
-
-
-
-    //Realizar analise
-    //1 faltas
-        //1 monofascia
-        //2 bifasica
-        //3 bifasica-terra
-        //4 trifasica
-        //5 voltar
-    //2 tempo-critico
-    //3 sair do programa
-
-
 
     fmt.Println("\nO tempo de execução do programa foi de", time.Since(start))
 }
