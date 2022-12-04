@@ -104,6 +104,7 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File, curto_circuito Ponto_curto_
         elementos_tipo_2_3[dado_do_transformador.De+"-"+dado_do_transformador.Para] = dado_do_transformador
     }
 
+
     for x := 0; x < len(dados_linhas); x ++ {
         _, elemento_ja_existe := elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]]
 
@@ -127,7 +128,7 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File, curto_circuito Ponto_curto_
     }
 
 
-    if curto_circuito.Ponto != 0 && curto_circuito.Ponto != 100 {
+    if curto_circuito.Ponto > 0 && curto_circuito.Ponto < 100 {
         barra_de_para, de_para := elementos_tipo_2_3[curto_circuito.De+"-"+curto_circuito.Para]
         barra_para_de, para_de := elementos_tipo_2_3[curto_circuito.Para+"-"+curto_circuito.De]
 
@@ -155,6 +156,18 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File, curto_circuito Ponto_curto_
             Nome:	                "Elemento tipo 3 do curto-circuito",
             Impedancia_positiva:    elemento_barra.Impedancia_positiva * complex(float64(100 - curto_circuito.Ponto), 0) / 100,
             Impedancia_zero:        elemento_barra.Impedancia_zero * complex(float64(100 - curto_circuito.Ponto), 0) / 100,
+        }
+    }
+
+
+    if curto_circuito.Ponto == 999 {
+        _, de_para := elementos_tipo_2_3[curto_circuito.De+"-"+curto_circuito.Para]
+        _, para_de := elementos_tipo_2_3[curto_circuito.Para+"-"+curto_circuito.De]
+
+        if de_para {
+            delete(elementos_tipo_2_3, curto_circuito.De+"-"+curto_circuito.Para)
+        } else if para_de {
+            delete(elementos_tipo_2_3, curto_circuito.Para+"-"+curto_circuito.De)
         }
     }
 

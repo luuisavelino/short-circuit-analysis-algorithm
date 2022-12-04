@@ -1,7 +1,9 @@
 package main
 
 import (
+	"math"
 	"strconv"
+
 	"github.com/xuri/excelize/v2"
 
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/analise"
@@ -95,7 +97,7 @@ func main() {
 
                 for {
                     fmt.Println("Escolha o tipo curto-circuito a ser analisado:")
-                    fmt.Println("\nEscolha o tipo de falta:\n  (1) - Monofasica\n  (2) - Bifasica\n  (3) - Bifasica Terra\n  (4) - Trifasica\n\n  (5) - Tempo crítico\n  (6) - Voltar")
+                    fmt.Println("\nEscolha o tipo de falta:\n  (1) - Monofasica\n  (2) - Bifasica\n  (3) - Bifasica Terra\n  (4) - Trifasica\n  (5) - Tempo crítico\n  (6) - Voltar")
                     fmt.Scanln(&escolha)
 
                     inicio_calculo_falta := time.Now()
@@ -114,8 +116,29 @@ func main() {
                         falta.Falta_trifasica(zbus_positiva, barras_sistema, barra_curto_circuito, barra.Elementos_tipo_2_3(tabela_dados, curto_circuito))
 
                     } else if escolha == "5" {
-                        fmt.Println("Realizando analise de tempo critico")
-            
+                        
+                        curto_circuito.Ponto = 999
+                        elementos_tipo_2_3 := barra.Elementos_tipo_2_3(tabela_dados, curto_circuito)
+
+                        zbus_pos_retirada_da_linha, _, barras_sistema_pos := zbus.Zbus(elementos_tipo_1, elementos_tipo_2_3, tamanho_do_sistema)
+
+                        fmt.Println("\nAnáise de tempo crítico para abertura dos disjuntores")
+                        fmt.Println("Gerador \t Angulo Crítico (°) \t\t Tempo máximo (s)")
+                        for _, gerador := range elementos_tipo_1 {
+                            posicao_barra_gerador_pre := barras_sistema[gerador.De].Posicao
+                            posicao_barra_cc_pre := barras_sistema[barra_curto_circuito].Posicao
+
+                            posicao_barra_gerador_pos := barras_sistema_pos[gerador.De].Posicao
+                            posicao_barra_cc_pos := barras_sistema_pos[barra_curto_circuito].Posicao 
+
+                            delta_critico, tempo := analise.Tempo_critico(
+                                zbus_positiva[posicao_barra_gerador_pre][posicao_barra_cc_pre], 
+                                zbus_pos_retirada_da_linha[posicao_barra_gerador_pos][posicao_barra_cc_pos], 
+                                gerador.Impedancia_positiva)
+
+                            fmt.Println(gerador.De, "\t\t", delta_critico * 180 / math.Pi, "\t\t", tempo)
+
+                        }
                     } else if escolha == "6" {
                         break
 
