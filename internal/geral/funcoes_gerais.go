@@ -68,6 +68,10 @@ func Retangular_To_Polar(valor complex128) string {
     modulo = Round(modulo, 4)
     angulo = Round(angulo * 180 / math.Pi, 4)
 
+    if modulo == 0 {
+        angulo = 0
+    }
+
     return fmt.Sprintf("%g ∠%g", modulo, angulo)
 }
 
@@ -75,4 +79,14 @@ func Retangular_To_Polar(valor complex128) string {
 func Quantidade_de_barras(tabela_excel *excelize.File) int {
     barras, _ := tabela_excel.GetRows(tabela_excel.GetSheetList()[0])
     return len(barras) - 2
+}
+
+
+func Valida_divisao_por_0(num complex128, den complex128) complex128 {
+
+    if den == 0 {
+        return 0
+    }
+
+    return num / den
 }

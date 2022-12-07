@@ -3,6 +3,7 @@ package falta
 import (
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 )
 
 
@@ -45,10 +46,12 @@ func Correntes_de_sequencia_nas_linhas(zbus_positiva zbus.Matrix, zbus_zero zbus
 		posicao_de := barras_sistema[linha.De].Posicao
 		posicao_para := barras_sistema[linha.Para].Posicao
 
+		
+
 		corrente_de_sequencia_na_linha[nome_linha] = Componente_de_sequencia{
 			Sequencia_positiva: (tensoes_sequencia[linha.De].Sequencia_positiva - tensoes_sequencia[linha.Para].Sequencia_positiva) / zbus_positiva[posicao_de][posicao_para],
 			Sequencia_negativa: (tensoes_sequencia[linha.De].Sequencia_negativa - tensoes_sequencia[linha.Para].Sequencia_negativa) / zbus_positiva[posicao_de][posicao_para],
-			Sequencia_zero: 	(tensoes_sequencia[linha.De].Sequencia_zero 	- tensoes_sequencia[linha.Para].Sequencia_zero) 	/ zbus_zero[posicao_de][posicao_para],
+			Sequencia_zero: 	geral.Valida_divisao_por_0(tensoes_sequencia[linha.De].Sequencia_zero - tensoes_sequencia[linha.Para].Sequencia_zero, zbus_zero[posicao_de][posicao_para]),
 		}
     }
 
