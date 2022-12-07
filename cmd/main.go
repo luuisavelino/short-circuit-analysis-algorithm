@@ -55,7 +55,7 @@ func main() {
             continue
         }
 
-        var tamanho_do_sistema int = geral.Quantidade_de_barras(tabela_dados)
+        tamanho_do_sistema, _ := geral.Quantidade_de_barras(tabela_dados)
 
         for {
             fmt.Println("Escolha o tipo de analise que deseja realizar:")
@@ -91,6 +91,8 @@ func main() {
 
                 elementos_tipo_1 := barra.Elementos_tipo_1(tabela_dados)
                 elementos_tipo_2_3 := barra.Elementos_tipo_2_3(tabela_dados, curto_circuito)
+
+                //barra.Linhas_sistema(barras_do_sistema ,elementos_tipo_2_3)
 
                 // Constroi a matriz Zbus do sistema
                 zbus_positiva, zbus_zero, barras_sistema := zbus.Zbus(elementos_tipo_1, elementos_tipo_2_3, tamanho_do_sistema)

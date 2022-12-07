@@ -76,9 +76,17 @@ func Retangular_To_Polar(valor complex128) string {
 }
 
 
-func Quantidade_de_barras(tabela_excel *excelize.File) int {
+func Quantidade_de_barras(tabela_excel *excelize.File) (int, []string) {
     barras, _ := tabela_excel.GetRows(tabela_excel.GetSheetList()[0])
-    return len(barras) - 2
+    
+    tamanho_do_sistema := len(barras) - 2
+    var barras_do_sistema []string
+
+    for x:=2; x < len(barras); x++ {
+        barras_do_sistema = append(barras_do_sistema, (barras[x][0]))
+    }
+
+    return tamanho_do_sistema, barras_do_sistema
 }
 
 

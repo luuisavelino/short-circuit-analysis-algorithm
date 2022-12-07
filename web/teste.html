@@ -1,0 +1,24 @@
+<div id="myDiagramDiv" style="width:1200px; height:1500px;"></div>
+
+<script src="https://unpkg.com/gojs"></script>
+
+<script>
+const myDiagram =
+  new go.Diagram("myDiagramDiv",  // create a Diagram for the HTML Div element
+    { "undoManager.isEnabled": true });  // enable undo & redo
+
+// define a simple Node template
+myDiagram.nodeTemplate =
+  new go.Node("Auto")  // the Shape will automatically surround the TextBlock
+    // add a Shape and a TextBlock to this "Auto" Panel
+    .add(new go.Shape("RoundedRectangle",
+        { strokeWidth: 0, fill: "white" })  // no border; default fill is white
+        .bind("fill", "color"))  // Shape.fill is bound to Node.data.color
+    .add(new go.TextBlock({ margin: 8, stroke: "#333" })  // some room around the text
+        .bind("text", "key"));  // TextBlock.text is bound to Node.data.key
+
+
+myDiagram.model = new go.GraphLinksModel(
+    [{"key":"800","color":"grey"},{"key":"808","color":"grey"},{"key":"barra_curto_circuito","color":"grey"},{"key":"810","color":"grey"},{"key":"814","color":"grey"},{"key":"824","color":"grey"},{"key":"839","color":"grey"},{"key":"840","color":"grey"},{"key":"848","color":"grey"},{"key":"856","color":"grey"},{"key":"895","color":"grey"},{"key":"896","color":"grey"},{"key":"897","color":"grey"},{"key":"898","color":"grey"},{"key":"904","color":"grey"},{"key":"915","color":"grey"},{"key":"919","color":"grey"},{"key":"925","color":"grey"},{"key":"933","color":"grey"},{"key":"934","color":"grey"},{"key":"938","color":"grey"},{"key":"939","color":"grey"},{"key":"955","color":"grey"},{"key":"959","color":"grey"},{"key":"960","color":"grey"},{"key":"964","color":"grey"},{"key":"965","color":"grey"},{"key":"976","color":"grey"},{"key":"995","color":"grey"},{"key":"1030","color":"grey"},{"key":"1047","color":"grey"},{"key":"1060","color":"grey"},{"key":"1210","color":"grey"},{"key":"2458","color":"grey"}],
+    [{"from":"839","to":"840"},{"from":"839","to":"898"},{"from":"839","to":"1047"},{"from":"856","to":"933"},{"from":"933","to":"955"},{"from":"1060","to":"897"},{"from":"barra_curto_circuito","to":"824"},{"from":"933","to":"934"},{"from":"904","to":"995"},{"from":"915","to":"1030"},{"from":"898","to":"848"},{"from":"964","to":"965"},{"from":"955","to":"964"},{"from":"976","to":"995"},{"from":"897","to":"808"},{"from":"800","to":"824"},{"from":"919","to":"1047"},{"from":"938","to":"959"},{"from":"1030","to":"955"},{"from":"995","to":"1060"},{"from":"895","to":"814"},{"from":"959","to":"960"},{"from":"925","to":"1060"},{"from":"976","to":"1210"},{"from":"898","to":"1047"},{"from":"938","to":"955"},{"from":"959","to":"895"},{"from":"856","to":"1060"},{"from":"896","to":"897"},{"from":"933","to":"895"},{"from":"995","to":"1030"},{"from":"938","to":"939"},{"from":"896","to":"2458"},{"from":"810","to":"856"},{"from":"934","to":"1047"},{"from":"933","to":"barra_curto_circuito"},{"from":"839","to":"2458"},{"from":"933","to":"959"},{"from":"964","to":"976"},{"from":"995","to":"964"}]);
+</script>
