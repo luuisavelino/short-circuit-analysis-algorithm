@@ -3,7 +3,9 @@ package falta
 import (
 	"fmt"
 	"math"
+	"math/cmplx"
 
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
 )
@@ -21,7 +23,7 @@ func Corrente_falta_monofasica(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix,
 	Icc_a := (3 * Vf) / (zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_positiva[posicao_na_zbus][posicao_na_zbus] + zbus_zero[posicao_na_zbus][posicao_na_zbus])
 
 	// Circuito aberto, não há corrente de falta monofasica
-	if imag(Icc_a) < math.Pow(10, -6) {
+	if cmplx.Abs(Icc_a) < math.Pow(10, -6) {
 		Icc_a = 0
 	}
 
@@ -88,7 +90,7 @@ func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zb
 	posicao := barras_sistema[barra_curto_circuito].Posicao
 	corrente_curto_circuito := 1 / zbus[posicao][posicao]
 
-	fmt.Printf("\nA corrente de curto circuito na barra %v é %v pu\n", barra_curto_circuito, corrente_curto_circuito)
+	fmt.Printf("\nA corrente de curto circuito na barra " + barra_curto_circuito + " é " + geral.Retangular_To_Polar(corrente_curto_circuito) + "pu\n")
 
 	for x := 0; x < tamanho_do_sistema; x++ {
 		tensao := Vf - (zbus[x][posicao] * corrente_curto_circuito)
@@ -97,7 +99,7 @@ func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zb
 
 	fmt.Println("As tensões nas barras são:")
 	for barra, posicao := range barras_sistema {
-		fmt.Println("\tBarra " + barra + " =", tensoes_barras[posicao.Posicao], "pu")
+		fmt.Println("\tBarra " + barra + " = " + geral.Retangular_To_Polar(tensoes_barras[posicao.Posicao]) + " pu")
     } 
 
 	// Encontrando a corrente em cada ramo:
@@ -109,6 +111,6 @@ func Falta_trifasica(zbus zbus.Matrix, barras_sistema map[string]zbus.Posicao_zb
 
 		corrente_nos_ramos[nome_linha] = corrente
 
-		fmt.Println("\tBarra", linha.De, "para", linha.Para, "=", corrente, "pu")
+		fmt.Println("\tBarra " + linha.De + " para " + linha.Para + " = " + geral.Retangular_To_Polar(corrente) + " pu")
     }
 }

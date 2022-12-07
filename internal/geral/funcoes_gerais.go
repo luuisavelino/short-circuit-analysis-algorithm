@@ -68,7 +68,7 @@ func Retangular_To_Polar(valor complex128) string {
     modulo = Round(modulo, 4)
     angulo = Round(angulo * 180 / math.Pi, 4)
 
-    return fmt.Sprintf("%f ∠%f", modulo, angulo)
+    return fmt.Sprintf("%g ∠%g", modulo, angulo)
 }
 
 

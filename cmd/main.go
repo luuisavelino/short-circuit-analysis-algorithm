@@ -91,7 +91,7 @@ func main() {
 
                 elementos_tipo_1 := barra.Elementos_tipo_1(tabela_dados)
                 elementos_tipo_2_3 := barra.Elementos_tipo_2_3(tabela_dados, curto_circuito)
-            
+
                 // Constroi a matriz Zbus do sistema
                 zbus_positiva, zbus_zero, barras_sistema := zbus.Zbus(elementos_tipo_1, elementos_tipo_2_3, tamanho_do_sistema)
             
