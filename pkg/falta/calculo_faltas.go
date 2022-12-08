@@ -1,9 +1,9 @@
 package falta
 
 import (
+	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/barra"
 	"github.com/luuisavelino/short-circuit-analysis-algorithm/pkg/zbus"
-	"github.com/luuisavelino/short-circuit-analysis-algorithm/internal/geral"
 )
 
 
@@ -38,20 +38,18 @@ func Tensoes_de_sequencia_nas_barras(zbus_positiva zbus.Matrix, zbus_zero zbus.M
 }
 
 
-func Correntes_de_sequencia_nas_linhas(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, tensoes_sequencia map[string]Componente_de_sequencia, elementos_tipo_2_3 map[string]barra.Dados_de_linha, barras_sistema map[string]zbus.Posicao_zbus) (map[string]Componente_de_sequencia) {
+func Correntes_de_sequencia_nas_linhas(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, tensoes_sequencia map[string]Componente_de_sequencia, elementos_tipo_2_3 map[string]barra.Dados_de_linha) (map[string]Componente_de_sequencia) {
 
 	var corrente_de_sequencia_na_linha = make(map[string]Componente_de_sequencia)
 
 	for nome_linha, linha := range elementos_tipo_2_3 {
-		posicao_de := barras_sistema[linha.De].Posicao
-		posicao_para := barras_sistema[linha.Para].Posicao
-
-		
+		impedancia_na_linha_positiva := elementos_tipo_2_3[linha.De + "-" + linha.Para].Impedancia_positiva
+		impedancia_na_linha_zero := elementos_tipo_2_3[linha.De + "-" + linha.Para].Impedancia_zero
 
 		corrente_de_sequencia_na_linha[nome_linha] = Componente_de_sequencia{
-			Sequencia_positiva: (tensoes_sequencia[linha.De].Sequencia_positiva - tensoes_sequencia[linha.Para].Sequencia_positiva) / zbus_positiva[posicao_de][posicao_para],
-			Sequencia_negativa: (tensoes_sequencia[linha.De].Sequencia_negativa - tensoes_sequencia[linha.Para].Sequencia_negativa) / zbus_positiva[posicao_de][posicao_para],
-			Sequencia_zero: 	geral.Valida_divisao_por_0(tensoes_sequencia[linha.De].Sequencia_zero - tensoes_sequencia[linha.Para].Sequencia_zero, zbus_zero[posicao_de][posicao_para]),
+			Sequencia_positiva: (tensoes_sequencia[linha.De].Sequencia_positiva - tensoes_sequencia[linha.Para].Sequencia_positiva) / impedancia_na_linha_positiva,
+			Sequencia_negativa: (tensoes_sequencia[linha.De].Sequencia_negativa - tensoes_sequencia[linha.Para].Sequencia_negativa) / impedancia_na_linha_positiva,
+			Sequencia_zero: 	geral.Valida_divisao_por_0(tensoes_sequencia[linha.De].Sequencia_zero - tensoes_sequencia[linha.Para].Sequencia_zero, impedancia_na_linha_zero),
 		}
     }
 

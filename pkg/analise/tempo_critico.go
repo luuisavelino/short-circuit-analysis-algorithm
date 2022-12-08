@@ -52,7 +52,9 @@ func Tempo_critico(X_1_2_pre_falta, X_1_2_pos_falta, Xd_gerador complex128) (Dad
 
 	geracao.Angulo_delta_maximo = math.Pi - math.Asin(potencia_media / geracao.Potencia_media_pos_barra_curto)
 
-	geracao.Angulo_delta_critico = math.Acos((potencia_media * (geracao.Angulo_delta_maximo - geracao.Angulo_tensao_de_saida_gerador) + geracao.Potencia_media_pos_barra_curto * math.Cos(geracao.Angulo_delta_maximo)) / geracao.Potencia_media_pos_barra_curto)
+	geracao.Angulo_delta_critico = math.Acos(
+		(potencia_media * (geracao.Angulo_delta_maximo - geracao.Angulo_tensao_de_saida_gerador) + 
+		geracao.Potencia_media_pos_barra_curto * math.Cos(geracao.Angulo_delta_maximo)) / geracao.Potencia_media_pos_barra_curto)
 
 	geracao.Tempo_maximo = math.Sqrt((4 * H * (geracao.Angulo_delta_critico - geracao.Angulo_tensao_de_saida_gerador)) / (Ws * potencia_media))
 

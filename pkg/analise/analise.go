@@ -23,7 +23,7 @@ func Mostra_matriz_zbus(zbus zbus.Matrix, tamanho_do_sistema int) {
 func Analise_curto_circuito(zbus_positiva zbus.Matrix, zbus_zero zbus.Matrix, elementos_tipo_2_3 map[string]barra.Dados_de_linha, barras_sistema map[string]zbus.Posicao_zbus, Icc_fase falta.Componente_de_fase, Icc_sequencia falta.Componente_de_sequencia, curto_circuito barra.Ponto_curto_circuito) {
 
 	tensoes_sequencia := falta.Tensoes_de_sequencia_nas_barras(zbus_positiva, zbus_zero, barras_sistema, Icc_sequencia)
-	correntes_sequencia := falta.Correntes_de_sequencia_nas_linhas(zbus_positiva, zbus_zero, tensoes_sequencia, elementos_tipo_2_3, barras_sistema)
+	correntes_sequencia := falta.Correntes_de_sequencia_nas_linhas(zbus_positiva, zbus_zero, tensoes_sequencia, elementos_tipo_2_3)
 
 
 	//========================= CORRENTE DE FALTA =========================
