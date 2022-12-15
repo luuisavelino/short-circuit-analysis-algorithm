@@ -8,7 +8,7 @@ RUN go get -d -v ./...
 
 RUN go install -v ./...
 
-COPY ./cmd/main.go .
+COPY ./main.go .
 
 RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o main .
 
