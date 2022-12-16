@@ -101,24 +101,12 @@ func Elementos_tipo_2_3(tabela_excel *excelize.File, curto_circuito Ponto_curto_
 	}
 
 	for x := 0; x < len(dados_linhas); x++ {
-		_, elemento_ja_existe := elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]]
-
-		if elemento_ja_existe {
-			elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]] = Dados_de_linha{
-				De:                  dados_linhas[x][0],
-				Para:                dados_linhas[x][1],
-				Nome:                dados_linhas[x][2],
-				Impedancia_positiva: geral.Impedancia(dados_linhas[x][2], dados_linhas[x][3], elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]].Impedancia_positiva),
-				Impedancia_zero:     geral.Impedancia(dados_linhas[x][4], dados_linhas[x][5], elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]].Impedancia_positiva),
-			}
-		} else {
-			elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]] = Dados_de_linha{
-				De:                  dados_linhas[x][0],
-				Para:                dados_linhas[x][1],
-				Nome:                dados_linhas[x][2],
-				Impedancia_positiva: geral.Impedancia(dados_linhas[x][2], dados_linhas[x][3], 0),
-				Impedancia_zero:     geral.Impedancia(dados_linhas[x][4], dados_linhas[x][5], 0),
-			}
+		elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]] = Dados_de_linha{
+			De:                  dados_linhas[x][0],
+			Para:                dados_linhas[x][1],
+			Nome:                dados_linhas[x][2],
+			Impedancia_positiva: geral.Impedancia(dados_linhas[x][2], dados_linhas[x][3], elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]].Impedancia_positiva),
+			Impedancia_zero:     geral.Impedancia(dados_linhas[x][4], dados_linhas[x][5], elementos_tipo_2_3[dados_linhas[x][0]+"-"+dados_linhas[x][1]].Impedancia_zero),
 		}
 	}
 

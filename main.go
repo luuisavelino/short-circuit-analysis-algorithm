@@ -48,7 +48,7 @@ func main() {
 		numero_escolhido, _ := strconv.Atoi(escolha)
 		nome_do_arquivo = arquivos[numero_escolhido]
 
-		tabela_dados, err := excelize.OpenFile("../data/" + nome_do_arquivo)
+		tabela_dados, err := excelize.OpenFile("./data/" + nome_do_arquivo)
 		if err != nil {
 			fmt.Println("Arquivo não encontrado, tente novamente")
 			continue
